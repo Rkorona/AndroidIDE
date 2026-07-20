@@ -27,11 +27,20 @@ public class ReflectionUtils {
      */
     public static void bypassHiddenAPIReflectionRestrictions() {
         if (!HIDDEN_API_REFLECTION_RESTRICTIONS_BYPASSED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            Logger.logDebug(LOG_TAG, "Bypassing android hidden api reflection restrictions");
-            try {
-                HiddenApiBypass.addHiddenApiExemptions("");
-            } catch (Throwable t) {
-                Logger.logStackTraceWithMessage(LOG_TAG, "Failed to bypass hidden API reflection restrictions", t);
+            // HiddenApiBypass uses hardcoded ART internal struct offsets that changed in
+            // Android 16 (API 36). Calling it there triggers a native SIGSEGV that cannot
+            // be caught by Java try-catch, crashing the app immediately on startup.
+            // Skip the bypass on API 36+; individual hidden-API call sites already handle
+            // the resulting NoSuchMethodException / IllegalAccessException gracefully.
+            if (Build.VERSION.SDK_INT < 36) {
+                Logger.logDebug(LOG_TAG, "Bypassing android hidden api reflection restrictions");
+                try {
+                    HiddenApiBypass.addHiddenApiExemptions("");
+                } catch (Throwable t) {
+                    Logger.logStackTraceWithMessage(LOG_TAG, "Failed to bypass hidden API reflection restrictions", t);
+                }
+            } else {
+                Logger.logDebug(LOG_TAG, "Skipping HiddenApiBypass on Android 16+ (API 36) — incompatible ART internals");
             }
 
             HIDDEN_API_REFLECTION_RESTRICTIONS_BYPASSED = true;
