@@ -1,6 +1,7 @@
 package com.termux.shared.android;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,10 @@ public class SELinuxUtils {
      */
     @Nullable
     public static String getContext() {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "android.os.SELinux is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         String methodName = "getContext";
         try {
@@ -50,6 +55,10 @@ public class SELinuxUtils {
      */
     @Nullable
     public static String getPidContext(int pid) {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "android.os.SELinux is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         String methodName = "getPidContext";
         try {
@@ -76,6 +85,10 @@ public class SELinuxUtils {
      */
     @Nullable
     public static String getFileContext(@NonNull String path) {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "android.os.SELinux is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         String methodName = "getFileContext";
         try {

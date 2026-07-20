@@ -193,8 +193,17 @@ public final class TermuxInstaller {
                                     }
                                     if (zipEntryName.startsWith("bin/") || zipEntryName.startsWith("libexec") ||
                                         zipEntryName.startsWith("lib/apt/apt-helper") || zipEntryName.startsWith("lib/apt/methods")) {
-                                        //noinspection OctalInteger
-                                        Os.chmod(targetFile.getAbsolutePath(), 0700);
+                                        try {
+                                            //noinspection OctalInteger
+                                            Os.chmod(targetFile.getAbsolutePath(), 0700);
+                                        } catch (android.system.ErrnoException chmodErr) {
+                                            // On Android 16+ (API 36) the W^X policy may deny chmod on
+                                            // app-private files. Log a warning and continue; if the zip
+                                            // entry already carries the execute bit the file will still
+                                            // be runnable, and a hard abort here would break all users.
+                                            Logger.logWarn(LOG_TAG, "chmod 0700 failed for " +
+                                                targetFile.getAbsolutePath() + " — " + chmodErr.getMessage());
+                                        }
                                     }
                                 }
                             }

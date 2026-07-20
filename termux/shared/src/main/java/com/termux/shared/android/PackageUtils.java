@@ -186,6 +186,10 @@ public class PackageUtils {
      */
     @Nullable
     public static Integer getApplicationInfoPrivateFlagsForPackage(@NonNull final ApplicationInfo applicationInfo) {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "ApplicationInfo.privateFlags is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         try {
             return (Integer) ReflectionUtils.invokeField(ApplicationInfo.class, "privateFlags", applicationInfo).value;
@@ -214,6 +218,10 @@ public class PackageUtils {
      */
     @Nullable
     public static String getApplicationInfoSeInfoForPackage(@NonNull final ApplicationInfo applicationInfo) {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "ApplicationInfo.seInfo is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         try {
             return (String) ReflectionUtils.invokeField(ApplicationInfo.class, Build.VERSION.SDK_INT < Build.VERSION_CODES.O ? "seinfo" : "seInfo", applicationInfo).value;
@@ -235,6 +243,10 @@ public class PackageUtils {
     @Nullable
     public static String getApplicationInfoSeInfoUserForPackage(@NonNull final ApplicationInfo applicationInfo) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null;
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "ApplicationInfo.seInfoUser is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         try {
             return (String) ReflectionUtils.invokeField(ApplicationInfo.class, "seInfoUser", applicationInfo).value;
@@ -253,6 +265,10 @@ public class PackageUtils {
      */
     @Nullable
     public static Integer getApplicationInfoStaticIntFieldValue(@NonNull String fieldName) {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "ApplicationInfo." + fieldName + " is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         try {
             return (Integer) ReflectionUtils.invokeField(ApplicationInfo.class, fieldName, null).value;

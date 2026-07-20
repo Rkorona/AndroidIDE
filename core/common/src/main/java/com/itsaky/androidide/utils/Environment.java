@@ -103,8 +103,15 @@ public final class Environment {
   }
 
   public static void setExecutable(@NonNull final File file) {
+    if (!file.exists()) {
+      // File hasn't been installed yet (e.g. bootstrap not set up); skip silently.
+      LOG.debug("Skipping setExecutable — file does not exist: {}", file);
+      return;
+    }
     if (!file.setExecutable(true)) {
-      LOG.error("Unable to set executable permissions to file: {}", file);
+      // On Android 16+ (API 36) the W^X policy prevents chmod on app-private files.
+      // The execute bit may already be set from bootstrap installation; log as a warning.
+      LOG.warn("Unable to set executable permissions to file: {}", file);
     }
   }
 

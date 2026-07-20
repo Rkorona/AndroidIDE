@@ -2,6 +2,10 @@ package com.termux.shared.android;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.system.ErrnoException;
+import android.system.Os;
+import android.system.StructPasswd;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,6 +91,21 @@ public class UserUtils {
     public static String getNameForUidFromLibcore(int uid) {
         if (uid < 0) return null;
 
+        // android.system.Os.getpwuid(int) is public since API 21.
+        // android.system.StructPasswd and its pw_name field are public since API 26 (O).
+        // Use this direct public path instead of Libcore reflection on API 26+ — it avoids
+        // the hidden-API bypass entirely and works correctly on Android 16+ (API 36).
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                StructPasswd passwd = Os.getpwuid(uid);
+                return passwd != null ? passwd.pw_name : null;
+            } catch (ErrnoException e) {
+                Logger.logStackTraceWithMessage(LOG_TAG, "Failed to get name for uid \"" + uid + "\" via Os.getpwuid()", e);
+                return null;
+            }
+        }
+
+        // Fallback for API < 26: reach into Libcore via reflection.
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         try {
             String libcoreClassName = "libcore.io.Libcore";

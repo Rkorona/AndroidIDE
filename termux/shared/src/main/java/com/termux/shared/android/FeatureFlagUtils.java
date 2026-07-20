@@ -2,6 +2,7 @@ package com.termux.shared.android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,6 +88,10 @@ public class FeatureFlagUtils {
      */
     @SuppressWarnings("unchecked")
     public static Map<String, String> getAllFeatureFlags() {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "android.util.FeatureFlagUtils is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         try {
             @SuppressLint("PrivateApi") Class<?> clazz = Class.forName(FEATURE_FLAGS_CLASS);
@@ -149,6 +154,10 @@ public class FeatureFlagUtils {
      */
     @Nullable
     public static Boolean isFeatureEnabled(@NonNull Context context, @NonNull String feature) {
+        if (Build.VERSION.SDK_INT >= 36) {
+            Logger.logDebug(LOG_TAG, "android.util.FeatureFlagUtils is unavailable on Android 16+ (API 36) — hidden API bypass not supported");
+            return null;
+        }
         ReflectionUtils.bypassHiddenAPIReflectionRestrictions();
         try {
             @SuppressLint("PrivateApi") Class<?> clazz = Class.forName(FEATURE_FLAGS_CLASS);
