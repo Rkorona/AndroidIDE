@@ -104,6 +104,36 @@ static int create_subprocess(JNIEnv* env,
             fflush(stderr);
         }
         execvp(cmd, argv);
+
+        // execvp failed (likely Android 16+ SELinux/W^X blocking exec on app_data_file).
+        // Fallback: invoke the system dynamic linker directly. The linker is a trusted system
+        // binary whose exec is always permitted; it loads the target ELF via mmap (not execve),
+        // bypassing the execve restriction on files in the app's private data directory.
+        {
+            const char* linker_path = NULL;
+            if (access("/system/bin/linker64", X_OK) == 0) {
+                linker_path = "/system/bin/linker64";
+            } else if (access("/system/bin/linker", X_OK) == 0) {
+                linker_path = "/system/bin/linker";
+            }
+            if (linker_path != NULL) {
+                // Count existing argv entries.
+                int argc = 0;
+                while (argv[argc]) argc++;
+                // new_argv = [linker_path, cmd, argv[1], ..., argv[argc-1], NULL]
+                char** new_argv = (char**) malloc((argc + 2) * sizeof(char*));
+                if (new_argv) {
+                    new_argv[0] = (char*) linker_path;
+                    new_argv[1] = (char*) cmd;
+                    for (int i = 1; i < argc; i++) new_argv[i + 1] = argv[i];
+                    new_argv[argc + 1] = NULL;
+                    execv(linker_path, new_argv);
+                    // execv of the system linker itself failed — nothing more we can do.
+                    free(new_argv);
+                }
+            }
+        }
+
         // Show terminal output about failing exec() call:
         char* error_message;
         if (asprintf(&error_message, "exec(\"%s\")", cmd) == -1) error_message = "exec()";
