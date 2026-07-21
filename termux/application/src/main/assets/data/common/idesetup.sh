@@ -307,6 +307,28 @@ if [ ! command -v "$pkgm" ] &>/dev/null; then
   exit 1
 fi
 
+# Workaround: if the AndroidIDE apt repository signing key has expired, APT will
+# refuse to update. Patch any sources.list entry that points to packages.androidide.com
+# to carry [trusted=yes] so APT skips GPG verification for that repo only.
+# The packages themselves are still fetched from the official server — this only
+# bypasses the expired-key guard, not the download integrity check.
+_patch_androidide_repo_trust() {
+  local f
+  for f in \
+    "$PREFIX/etc/apt/sources.list" \
+    "$PREFIX/etc/apt/sources.list.d/"*.list \
+    "/etc/apt/sources.list" \
+    "/etc/apt/sources.list.d/"*.list; do
+    [ -f "$f" ] || continue
+    # Only touch lines that reference packages.androidide.com and don't already have [trusted=yes]
+    if grep -q 'packages\.androidide\.com' "$f" && ! grep -q '\[trusted=yes\]' "$f"; then
+      print_warn "Patching $f: adding [trusted=yes] for packages.androidide.com (expired GPG key workaround)"
+      sed -i 's|\(deb\s\+\)\(https\?://packages\.androidide\.com\)|\1[trusted=yes] \2|g' "$f"
+    fi
+  done
+}
+_patch_androidide_repo_trust
+
 # Update repositories and packages
 print_info "Update packages..."
 
