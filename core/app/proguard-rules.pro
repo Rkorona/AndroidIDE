@@ -28,15 +28,24 @@
 -keep class org.xml.** { *; }
 
 # Services
-# Keep classes annotated with @AutoService AND their no-arg constructors.
-# R8 in full mode can strip the default constructor and remove META-INF/services
-# entries when the implementing class is not directly referenced in code.
-# The ServiceLoader instantiates providers via c.getConstructor().newInstance(),
-# so the no-arg constructor must be explicitly preserved.
--keep @com.google.auto.service.AutoService class ** { <init>(); }
--keepclassmembers class ** {
-    @com.google.auto.service.AutoService <methods>;
-}
+# @AutoService has CLASS retention, so R8 cannot see it at shrink time.
+# Annotation-based -keep rules do NOT work for it.
+# Explicitly keep each service provider class and its no-arg constructor so that:
+#   1. R8 does not strip the class (which would also remove the META-INF/services entry)
+#   2. ServiceLoader can instantiate via c.getConstructor().newInstance()
+-keep class com.itsaky.androidide.app.configuration.IDEBuildConfigProviderImpl { <init>(); }
+-keep class com.itsaky.androidide.app.configuration.JdkDistributionProviderImpl { <init>(); }
+-keep class com.itsaky.androidide.indexing.platform.PlatformIndexService { <init>(); }
+-keep class com.itsaky.androidide.logging.IDELoggingConfigurator { <init>(); }
+-keep class com.itsaky.androidide.ui.themes.ThemeManager { <init>(); }
+-keep class com.itsaky.androidide.actions.internal.DefaultActionsRegistry { <init>(); }
+-keep class com.itsaky.androidide.projects.internal.ProjectManagerImpl { <init>(); }
+-keep class com.itsaky.androidide.lookup.internal.DefaultLookup { <init>(); }
+-keep class com.itsaky.androidide.templates.impl.TemplateProviderImpl { <init>(); }
+-keep class com.itsaky.androidide.templates.impl.TemplateWidgetViewProviderImpl { <init>(); }
+-keep class com.itsaky.androidide.xml.internal.resources.DefaultResourceTableRegistry { <init>(); }
+-keep class com.itsaky.androidide.xml.internal.versions.DefaultApiVersionsRegistry { <init>(); }
+-keep class com.itsaky.androidide.xml.internal.widgets.DefaultWidgetTableRegistry { <init>(); }
 
 # EventBus
 -keepclassmembers class ** {
