@@ -42,11 +42,20 @@ plugins {
 }
 
 buildscript {
+  // AGP 9.3.0 requires BouncyCastle 1.78+ (BCObjectIdentifiers.xmss_SHAKE128_512ph).
+  // resolutionStrategy.force ensures Gradle conflict-resolution does not downgrade
+  // the version via AGP's own transitive deps even when classpath() entries are present.
+  configurations.all {
+    resolutionStrategy {
+      force(
+        "org.bouncycastle:bcprov-jdk18on:1.78.1",
+        "org.bouncycastle:bcpkix-jdk18on:1.78.1",
+      )
+    }
+  }
   dependencies {
     classpath(libs.kotlin.gradle.plugin)
     classpath(libs.nav.safe.args.gradle.plugin)
-    // AGP 9.3.0 requires BouncyCastle 1.78+ (BCObjectIdentifiers.xmss_SHAKE128_512ph).
-    // Force it here so the build classpath wins over any older version from the JDK.
     classpath("org.bouncycastle:bcprov-jdk18on:1.78.1")
     classpath("org.bouncycastle:bcpkix-jdk18on:1.78.1")
   }
@@ -73,6 +82,15 @@ subprojects {
 
   configurations.all {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
+    // Force the Android variant of Guava everywhere so the JRE variant (which some
+    // transitive deps drag in) does not end up alongside guava-*-android.jar on R8's
+    // classpath, causing "Type ... is defined multiple times" errors.
+    resolutionStrategy.eachDependency {
+      if (requested.group == "com.google.guava" && requested.name == "guava") {
+        useVersion("33.6.0-android")
+        because("Enforce Android variant of Guava to prevent JRE/android class duplication in R8")
+      }
+    }
   }
 
   project.version = rootProject.version

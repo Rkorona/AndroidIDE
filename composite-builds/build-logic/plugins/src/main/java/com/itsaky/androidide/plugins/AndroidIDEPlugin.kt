@@ -64,7 +64,10 @@ class AndroidIDEPlugin : Plugin<Project> {
     logger.info("${project.path} will run task '$taskName' for tests in CI")
 
     project.tasks.create("runTestsInCI") {
-      dependsOn(taskName)
+      // Use tasks.matching (a live collection) instead of dependsOn(taskName) so that modules
+      // which do not have the expected test task (e.g. :testing:benchmarks uses testBuildType =
+      // "release" and therefore has no testDebugUnitTest) do not fail at configuration time.
+      dependsOn(project.tasks.matching { it.name == taskName })
     }
   }
 }
