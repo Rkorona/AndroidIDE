@@ -186,23 +186,36 @@ public final class TermuxInstaller {
                                 }
 
                                 if (!isDirectory) {
+                                    boolean needsExecute = zipEntryName.startsWith("bin/") ||
+                                        zipEntryName.startsWith("libexec") ||
+                                        zipEntryName.startsWith("lib/apt/apt-helper") ||
+                                        zipEntryName.startsWith("lib/apt/methods");
                                     try (FileOutputStream outStream = new FileOutputStream(targetFile)) {
                                         int readBytes;
                                         while ((readBytes = zipInput.read(buffer)) != -1)
                                             outStream.write(buffer, 0, readBytes);
-                                    }
-                                    if (zipEntryName.startsWith("bin/") || zipEntryName.startsWith("libexec") ||
-                                        zipEntryName.startsWith("lib/apt/apt-helper") || zipEntryName.startsWith("lib/apt/methods")) {
-                                        try {
-                                            //noinspection OctalInteger
-                                            Os.chmod(targetFile.getAbsolutePath(), 0700);
-                                        } catch (android.system.ErrnoException chmodErr) {
-                                            // On Android 16+ (API 36) the W^X policy may deny chmod on
-                                            // app-private files. Log a warning and continue; if the zip
-                                            // entry already carries the execute bit the file will still
-                                            // be runnable, and a hard abort here would break all users.
-                                            Logger.logWarn(LOG_TAG, "chmod 0700 failed for " +
-                                                targetFile.getAbsolutePath() + " — " + chmodErr.getMessage());
+                                        if (needsExecute) {
+                                            // Attempt fchmod on the open fd BEFORE closing.
+                                            // On Android 16+ (API 36) path-based chmod is blocked by the
+                                            // W^X policy, but fchmod on an open FileDescriptor may succeed.
+                                            try {
+                                                //noinspection OctalInteger
+                                                Os.fchmod(outStream.getFD(), 0700);
+                                            } catch (android.system.ErrnoException fchmodErr) {
+                                                // fchmod also failed — fall back to path-based chmod below.
+                                                Logger.logWarn(LOG_TAG, "fchmod 0700 failed for " +
+                                                    targetFile.getAbsolutePath() + " — " + fchmodErr.getMessage());
+                                                try {
+                                                    //noinspection OctalInteger
+                                                    Os.chmod(targetFile.getAbsolutePath(), 0700);
+                                                } catch (android.system.ErrnoException chmodErr) {
+                                                    // On Android 16+ (API 36) the W^X policy may deny chmod
+                                                    // on app-private files. Log a warning and continue;
+                                                    // if both attempts fail the terminal will not start.
+                                                    Logger.logWarn(LOG_TAG, "chmod 0700 also failed for " +
+                                                        targetFile.getAbsolutePath() + " — " + chmodErr.getMessage());
+                                                }
+                                            }
                                         }
                                     }
                                 }
