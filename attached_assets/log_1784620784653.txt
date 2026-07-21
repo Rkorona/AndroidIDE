@@ -1,0 +1,261 @@
+w: file:///home/runner/work/AndroidIDE/AndroidIDE/core/app/src/main/java/com/itsaky/androidide/viewmodel/MainViewModel.kt:75:32 The corresponding parameter in the supertype 'Observer' is named 'value'. This may cause problems when calling this function with named arguments.
+/home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:11: error: package androidx.legacy.widget does not exist
+
+> Task :core:app:compileReleaseJavaWithJavac FAILED
+import androidx.legacy.widget.Space;
+                             ^
+/home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:50: error: cannot find symbol
+  public final Space spaceBottom;
+               ^
+  symbol:   class Space
+  location: class LayoutEditorBottomSheetBinding
+/home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:63: error: cannot find symbol
+      @NonNull FloatingActionButton shareOutputFab, @NonNull Space spaceBottom,
+                                                             ^
+  symbol:   class Space
+  location: class LayoutEditorBottomSheetBinding
+/home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:151: error: cannot find symbol
+      Space spaceBottom = ViewBindings.findChildViewById(rootView, id);
+      ^
+  symbol:   class Space
+  location: class LayoutEditorBottomSheetBinding
+Note: /home/runner/work/AndroidIDE/AndroidIDE/core/app/src/main/java/com/itsaky/androidide/adapters/EditorBottomSheetTabAdapter.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+4 errors
+
+[Incubating] Problems report is available at: file:///home/runner/work/AndroidIDE/AndroidIDE/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':core:app:compileReleaseJavaWithJavac' (registered by plugin 'com.android.internal.application').
+> Compilation failed; see the compiler output below.
+  Note: /home/runner/work/AndroidIDE/AndroidIDE/core/app/src/main/java/com/itsaky/androidide/adapters/EditorBottomSheetTabAdapter.java uses unchecked or unsafe operations.
+  /home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:50: error: cannot find symbol
+    public final Space spaceBottom;
+                 ^
+    symbol:   class Space
+    location: class LayoutEditorBottomSheetBinding
+  /home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:63: error: cannot find symbol
+        @NonNull FloatingActionButton shareOutputFab, @NonNull Space spaceBottom,
+                                                               ^
+    symbol:   class Space
+    location: class LayoutEditorBottomSheetBinding
+  /home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:151: error: cannot find symbol
+        Space spaceBottom = ViewBindings.findChildViewById(rootView, id);
+        ^
+    symbol:   class Space
+    location: class LayoutEditorBottomSheetBinding
+  Note: Recompile with -Xlint:unchecked for details.
+  /home/runner/work/AndroidIDE/AndroidIDE/core/app/build/generated/data_binding_base_class_source_out/***/out/com/itsaky/androidide/databinding/LayoutEditorBottomSheetBinding.java:11: error: package androidx.legacy.widget does not exist
+  import androidx.legacy.widget.Space;
+                               ^
+  4 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+BUILD FAILED in 6m 43s
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+1524 actionable tasks: 1524 executed
+Process completed with exit code 1.
+> Task :tooling:impl:testClasses UP-TO-DATE
+
+> Task :tooling:impl:test
+
+ApplicationIDComputationTest > test variant-specific application ID computation for build types with applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:206
+
+ApplicationIDComputationTest > test variant-specific application ID computation for build types and product flavors with applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:336
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with custom applicationId and applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:454
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:93
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with custom applicationId FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:400
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with applicationIdSuffix and multiple build types FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:152
+
+ApplicationIDComputationTest > test variant-specific application ID computation for default applicationId FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:40
+
+ApplicationIDComputationTest > test variant-specific application ID computation for build types with applicationIdSuffix and multiple product flavors FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:268
+
+CIOnlyToolingApiTests > test CI-only simple multi module project initialization with multiple AGP versions FAILED
+    com.google.common.truth.AssertionErrorWithFacts at CIOnlyToolingApiTests.kt:60
+
+CIOnlyToolingApiTests > test CI-only latest tested AGP version warning FAILED
+    com.google.common.truth.AssertionErrorWithFacts at CIOnlyToolingApiTests.kt:86
+
+CIOnlyToolingApiTests > test CI-only minimum AGP version failure FAILED
+    com.google.common.truth.AssertionErrorWithFacts at CIOnlyToolingApiTests.kt:109
+
+MultiModuleAndroidProjectTest > test simple multi module project initialization FAILED
+    com.google.common.truth.AssertionErrorWithFacts at MultiModuleAndroidProjectTest.kt:48
+
+ProjectInitializationCancellationTest > test project initialization cancellation FAILED
+    com.google.common.truth.Platform$ComparisonFailureWithFacts at ProjectInitializationCancellationTest.kt:50
+
+16 tests completed, 13 failed
+
+> Task :tooling:impl:test FAILED
+
+
+FAILURE: Build failed with an exception.
+
+[Incubating] Problems report is available at: file:///home/runner/work/AndroidIDE/AndroidIDE/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+62 actionable tasks: 62 executed
+* What went wrong:
+Execution failed for task ':tooling:impl:test'.
+> There were failing tests. See the report at: file:///home/runner/work/AndroidIDE/AndroidIDE/tooling/impl/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+BUILD FAILED in 5m 33s
+Process completed with exit code 1.
+
+> Task :tooling:impl:testClasses UP-TO-DATE
+
+> Task :tooling:impl:test
+
+ApplicationIDComputationTest > test variant-specific application ID computation for build types with applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:206
+
+ApplicationIDComputationTest > test variant-specific application ID computation for build types and product flavors with applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:336
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with custom applicationId and applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:454
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with applicationIdSuffix FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:93
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with custom applicationId FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:400
+
+ApplicationIDComputationTest > test variant-specific application ID computation for product flavors with applicationIdSuffix and multiple build types FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:152
+
+ApplicationIDComputationTest > test variant-specific application ID computation for default applicationId FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:40
+
+ApplicationIDComputationTest > test variant-specific application ID computation for build types with applicationIdSuffix and multiple product flavors FAILED
+    com.google.common.truth.AssertionErrorWithFacts at ApplicationIDComputationTest.kt:268
+
+CIOnlyToolingApiTests > test CI-only simple multi module project initialization with multiple AGP versions FAILED
+    com.google.common.truth.AssertionErrorWithFacts at CIOnlyToolingApiTests.kt:60
+
+CIOnlyToolingApiTests > test CI-only latest tested AGP version warning FAILED
+    com.google.common.truth.AssertionErrorWithFacts at CIOnlyToolingApiTests.kt:86
+
+CIOnlyToolingApiTests > test CI-only minimum AGP version failure FAILED
+    com.google.common.truth.AssertionErrorWithFacts at CIOnlyToolingApiTests.kt:109
+
+MultiModuleAndroidProjectTest > test simple multi module project initialization FAILED
+    com.google.common.truth.AssertionErrorWithFacts at MultiModuleAndroidProjectTest.kt:48
+
+ProjectInitializationCancellationTest > test project initialization cancellation FAILED
+    com.google.common.truth.Platform$ComparisonFailureWithFacts at ProjectInitializationCancellationTest.kt:50
+
+16 tests completed, 13 failed
+
+> Task :tooling:impl:test FAILED
+
+
+FAILURE: Build failed with an exception.
+
+[Incubating] Problems report is available at: file:///home/runner/work/AndroidIDE/AndroidIDE/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+62 actionable tasks: 62 executed
+* What went wrong:
+Execution failed for task ':tooling:impl:test'.
+> There were failing tests. See the report at: file:///home/runner/work/AndroidIDE/AndroidIDE/tooling/impl/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+BUILD FAILED in 5m 33s
+Process completed with exit code 1.
+
+
+Compiling xml file /home/runner/.gradle/caches/9.6.1/transforms/70dd9be2d88a59a3f99110c9275343d6/transformed/appcompat-1.7.1/res/anim/btn_checkbox_to_unchecked_box_inner_merged_animation.xml to /home/runner/.gradle/caches/9.6.1/transforms/142f5d1b1c3638f0faa4cef56d978dd5/transformed/androidx.appcompat/anim_btn_checkbox_to_unchecked_box_inner_merged_animation.xml.flat
+Caching disabled for LibrarySymbolTableTransform: /home/runner/.gradle/caches/9.6.1/transforms/8834cea850fe0238be2192e7377c87a0/transformed/emoji2-views-helper-1.3.0 because:
+  Build cache is disabled
+  Caching not enabled.
+Caching disabled for LibrarySymbolTableTransform: /home/runner/.gradle/caches/9.6.1/transforms/b46edb1bcc1c47ae1508cec0eb8873df/transformed/emoji2-1.3.0 because:
+  Build cache is disabled
+  Caching not enabled.
+Caching disabled for LibrarySymbolTableTransform: /home/runner/.gradle/caches/9.6.1/transforms/4b3d0fd740dfc5d84f6a1eb4af040c11/transformed/lifecycle-process-2.9.0 because:
+  Build cache is disabled
+  Caching not enabled.
+Caching disabled for LibrarySymbolTableTransform: /home/runner/.gradle/caches/9.6.1/transforms/a4e49bf93d45245812365ec1dd06ec70/transformed/window-1.0.0 because:
+  Build cache is disabled
+  Caching not enabled.
+Caching disabled for LibrarySymbolTableTransform: /home/runner/.gradle/caches/9.6.1/transforms/9fcc005070a54281db91f375060947aa/transformed/profileinstaller-1.4.0 because:
+  Build cache is disabled
+  Caching not enabled.
+Caching disabled for LibrarySymbolTableTransform: /home/runner/.gradle/caches/9.6.1/transforms/df6376df8b1a7686195d92ce1fdd6714/transformed/startup-runtime-1.1.1 because:
+  Build cache is disabled
+  Caching not enabled.
+Caching disabled for LibrarySymbolTableTransform: /home/runner/.gradle/caches/9.6.1/transforms/ff3775db0dcc1d12d1b305cee058ddd3/transformed/tracing-1.2.0 because:
+  Build cache is disabled
+  Caching not enabled.
+Caching disabled for task ':core:actions:processDebugAndroidTestResources' because:
+  Build cache is disabled
+Task ':core:actions:processDebugAndroidTestResources' is not up-to-date because:
+  No history is available.
+The input changes require a full rebuild for incremental task ':core:actions:processDebugAndroidTestResources'.
+
+> Task :core:actions:validateSigningDebugAndroidTest FAILED
+Caching disabled for task ':core:actions:validateSigningDebugAndroidTest' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Task ':core:actions:validateSigningDebugAndroidTest' is not up-to-date because:
+  Task.upToDateWhen is false.
+Creating default debug keystore at /home/runner/.config/.android/debug.keystore
+
+> Task :core:actions:processDebugAndroidTestResources
+Aapt output file /home/runner/work/AndroidIDE/AndroidIDE/core/actions/build/intermediates/linked_resources_binary_format/debugAndroidTest/processDebugAndroidTestResources/linked-resources-binary-format.ap_
+Build afb9a956-a078-4aef-ae54-b1137a6c1bd9 is closed
+AAPT2 aapt2-9.3.0-15703166-linux Daemon #0: shutdown
+AAPT2 aapt2-9.3.0-15703166-linux Daemon #1: shutdown
+
+[Incubating] Problems report is available at: file:///home/runner/work/AndroidIDE/AndroidIDE/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':core:actions:validateSigningDebugAndroidTest' (registered by plugin 'com.android.internal.library').
+> Class org.bouncycastle.asn1.bc.BCObjectIdentifiers does not have member field 'org.bouncycastle.asn1.ASN1ObjectIdentifier xmss_SHAKE128_512ph'
+
+* Try:
+> Run with --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':core:actions:validateSigningDebugAndroidTest' (registered by plugin 'com.android.internal.library').

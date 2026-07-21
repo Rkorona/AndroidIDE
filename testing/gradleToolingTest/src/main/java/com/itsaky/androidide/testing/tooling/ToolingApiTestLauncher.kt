@@ -58,16 +58,22 @@ import kotlin.io.path.pathString
  */
 object ToolingApiTestLauncher {
 
-  private val opens =
-    mutableMapOf("java.base" to "java.lang", "java.base" to "java.util",
-      "java.base" to "java.io")
+  // Use List<Pair> instead of Map to preserve all entries — mutableMapOf with duplicate
+  // keys silently drops all but the last, which was omitting java.lang / java.util opens
+  // and all javac exports except javac.util, breaking the tooling server on Java 9+.
+  private val opens = listOf(
+    "java.base" to "java.lang",
+    "java.base" to "java.util",
+    "java.base" to "java.io"
+  )
 
-  private val exports =
-    mutableMapOf("jdk.compiler" to "com.sun.tools.javac.api",
-      "jdk.compiler" to "com.sun.tools.javac.file",
-      "jdk.compiler" to "com.sun.tools.javac.parser",
-      "jdk.compiler" to "com.sun.tools.javac.tree",
-      "jdk.compiler" to "com.sun.tools.javac.util")
+  private val exports = listOf(
+    "jdk.compiler" to "com.sun.tools.javac.api",
+    "jdk.compiler" to "com.sun.tools.javac.file",
+    "jdk.compiler" to "com.sun.tools.javac.parser",
+    "jdk.compiler" to "com.sun.tools.javac.tree",
+    "jdk.compiler" to "com.sun.tools.javac.util"
+  )
 
   @JvmOverloads
   @JvmStatic
@@ -171,12 +177,12 @@ object ToolingApiTestLauncher {
       }
     }
 
-    for (open in opens) {
-      cmd.add("--add-opens=${open.key}/${open.value}=ALL-UNNAMED")
+    for ((module, pkg) in opens) {
+      cmd.add("--add-opens=$module/$pkg=ALL-UNNAMED")
     }
 
-    for (export in exports) {
-      cmd.add("--add-exports=${export.key}/${export.value}=ALL-UNNAMED")
+    for ((module, pkg) in exports) {
+      cmd.add("--add-exports=$module/$pkg=ALL-UNNAMED")
     }
 
     cmd.add("-D${ToolingProps.TESTING_IS_TEST_ENV}=true")
