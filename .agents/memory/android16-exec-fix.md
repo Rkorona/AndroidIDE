@@ -1,0 +1,48 @@
+---
+name: Android 16 exec fix for AndroidIDE terminal
+description: Three-layer approach to fix execve Permission denied on Android 16 (API 36) in AndroidIDE's embedded terminal
+---
+
+# Android 16 exec fix
+
+## The Problem
+Android 16 (API 36) enforces W^X + SELinux policy that blocks execve() on files in
+the app's private data directory (SELinux context: app_data_file). Both path-based
+chmod and fchmod-on-write-fd are also blocked when adding execute bits to writable files.
+
+## Root Cause Chain
+1. TermuxInstaller extracts bootstrap zip → files get mode 0644 (no execute bit)
+2. Os.chmod(path, 0700) → blocked by Android 16 W^X policy
+3. Os.fchmod(write-fd, 0700) → also blocked (file still writable = W^X violation)
+4. execvp("bash") → EACCES
+
+## Three-Layer Fix
+
+### Layer 1 — fchmod on read-only fd (TermuxInstaller.java ~line 189)
+Close write fd first, reopen read-only, fchmod(ro_fd, 0500).
+File is not writable at time of fchmod → no W^X violation.
+
+### Layer 2 — linker64 fallback for initial shell (termux.c ~line 106)
+After execvp(cmd) fails, retry:
+  execv("/system/bin/linker64", [linker64, cmd, argv[1..]])
+System binary exec is always allowed; linker loads target ELF via mmap (not execve).
+**Confirmed working** — bash started and ran the setup script (screenshot showed exit 126, not 1).
+
+### Layer 3 — LD_PRELOAD exec interceptor (exec-wrapper.c + TermuxShellEnvironment.java)
+libandroidide-exec-wrapper.so injected via LD_PRELOAD=<nativeLibraryDir>/...
+Intercepts ALL execve() within bash and child processes:
+  execve() → on EACCES → exec_via_linker() → real execv("/system/bin/linker64", ...)
+LD_PRELOAD is preserved in envp so every child process inherits the wrapper.
+
+**Why:** Layer 2 only covers the initial bash launch. bash's own execve for uname etc. needs the same treatment.
+
+## Key Files
+- termux/application/src/main/java/com/termux/app/TermuxInstaller.java (Layer 1)
+- termux/emulator/src/main/jni/termux.c (Layer 2)
+- termux/application/src/main/cpp/exec-wrapper.c (Layer 3 — new file)
+- termux/application/src/main/cpp/Android.mk (builds libandroidide-exec-wrapper)
+- termux/shared/src/main/java/com/termux/shared/termux/shell/command/environment/TermuxShellEnvironment.java (Layer 3 LD_PRELOAD injection)
+
+## Testing
+- MUST clear app data before testing — TermuxInstaller skips if prefix already exists
+- Exit code 1 = exec never started; Exit code 126 = exec started but binary not executable

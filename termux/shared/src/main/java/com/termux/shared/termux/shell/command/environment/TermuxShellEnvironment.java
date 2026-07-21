@@ -3,6 +3,7 @@ package com.termux.shared.termux.shell.command.environment;
 import static com.itsaky.androidide.utils.Environment.ANDROID_HOME;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -17,6 +18,7 @@ import com.termux.shared.termux.TermuxBootstrap;
 import com.termux.shared.termux.TermuxConstants;
 import com.termux.shared.termux.shell.TermuxShellUtils;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
@@ -81,6 +83,23 @@ public class TermuxShellEnvironment extends AndroidShellEnvironment {
             environment.put(ENV_TMPDIR, TermuxConstants.TERMUX_TMP_PREFIX_DIR_PATH);
             environment.put(ENV_PATH, TermuxConstants.TERMUX_BIN_PREFIX_DIR_PATH + String.format(":%s/cmdline-tools/latest/bin", ANDROID_HOME.getAbsolutePath()));
             environment.remove(ENV_LD_LIBRARY_PATH);
+        }
+
+        // Android 16+ (API 36) blocks execve() on app_data_file via SELinux.
+        // Inject our LD_PRELOAD shim so that every command spawned by the shell
+        // retries failed execs through the system dynamic linker (linker64/linker),
+        // which loads binaries via mmap and bypasses the execve restriction.
+        if (Build.VERSION.SDK_INT >= 36) {
+            String nativeLibDir = currentPackageContext.getApplicationInfo().nativeLibraryDir;
+            File wrapper = new File(nativeLibDir, "libandroidide-exec-wrapper.so");
+            if (wrapper.exists()) {
+                String existing = environment.get("LD_PRELOAD");
+                String wrapperPath = wrapper.getAbsolutePath();
+                environment.put("LD_PRELOAD",
+                    (existing != null && !existing.isEmpty())
+                        ? wrapperPath + ":" + existing
+                        : wrapperPath);
+            }
         }
 
         return environment;
