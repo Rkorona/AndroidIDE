@@ -28,8 +28,12 @@
 -keep class org.xml.** { *; }
 
 # Services
--keep @com.google.auto.service.AutoService class ** {
-}
+# Keep classes annotated with @AutoService AND their no-arg constructors.
+# R8 in full mode can strip the default constructor and remove META-INF/services
+# entries when the implementing class is not directly referenced in code.
+# The ServiceLoader instantiates providers via c.getConstructor().newInstance(),
+# so the no-arg constructor must be explicitly preserved.
+-keep @com.google.auto.service.AutoService class ** { <init>(); }
 -keepclassmembers class ** {
     @com.google.auto.service.AutoService <methods>;
 }
