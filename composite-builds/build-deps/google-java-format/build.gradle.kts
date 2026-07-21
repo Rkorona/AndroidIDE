@@ -25,6 +25,7 @@ android {
 }
 
 dependencies {
+    implementation("org.checkerframework:checker-qual:3.43.0")
     implementation(libs.google.guava)
     implementation(libs.google.auto.value.annotations)
     implementation(libs.google.auto.service.annotations)

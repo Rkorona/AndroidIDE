@@ -28,7 +28,6 @@ import com.itsaky.androidide.plugins.tasks.SetupAapt2Task
 import com.itsaky.androidide.plugins.util.SdkUtils.getAndroidJar
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.configurationcache.extensions.capitalized
 
 /**
  * Handles asset copying and generation.
@@ -54,7 +53,9 @@ class AndroidIDEAssetsPlugin : Plugin<Project> {
 
       androidComponentsExtension.onVariants { variant ->
 
-        val variantNameCapitalized = variant.name.capitalized()
+        val variantNameCapitalized = variant.name.replaceFirstChar {
+          if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString()
+        }
 
         variant.sources.jniLibs?.addGeneratedSourceDirectory(setupAapt2TaskTaskProvider,
           SetupAapt2Task::outputDirectory)

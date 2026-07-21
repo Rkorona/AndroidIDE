@@ -18,6 +18,7 @@ package com.itsaky.androidide.builder.model
 
 import com.android.builder.model.v2.ide.AndroidArtifact
 import com.android.builder.model.v2.ide.JavaArtifact
+import com.android.builder.model.v2.ide.TestSuiteArtifact
 import com.android.builder.model.v2.ide.Variant
 import java.io.File
 import java.io.Serializable
@@ -40,4 +41,6 @@ class DefaultVariant : Variant, Serializable {
   override val runTestInSeparateProcess: Boolean = false
   override val deviceTestArtifacts: Map<String, AndroidArtifact> = emptyMap()
   override val hostTestArtifacts: Map<String, JavaArtifact> = emptyMap()
+  override val testSuiteArtifacts: Map<String, TestSuiteArtifact> = emptyMap()
+  override val experimentalProperties: Map<String, String> = emptyMap()
 }

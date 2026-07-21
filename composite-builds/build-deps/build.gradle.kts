@@ -15,28 +15,25 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.android.library) apply false
-  alias(libs.plugins.kotlin.android) apply false
 }
 
 subprojects {
   plugins.withId("com.android.library") {
-    extensions.getByType(BaseExtension::class.java).apply {
-      compileSdkVersion(37)
+    extensions.configure<LibraryExtension> {
+      compileSdk = 37
 
-      defaultConfig {
+      defaultConfig.apply {
         minSdk = 36
-        //noinspection ExpiredTargetSdkVersion
-        targetSdk = 37
       }
 
-      compileOptions {
+      compileOptions.apply {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
       }

@@ -27,7 +27,6 @@ import com.itsaky.androidide.build.config.downloadVersion
 import com.itsaky.androidide.build.config.publishingVersion
 import com.itsaky.androidide.build.config.replaceContents
 import com.itsaky.androidide.build.config.simpleVersionName
-import org.jetbrains.kotlin.incremental.createDirectory
 
 plugins {
   //noinspection JavaPluginLanguageLevel
@@ -38,7 +37,7 @@ plugins {
 description = "Information about the AndroidIDE build"
 
 val buildInfoGenDir: Provider<Directory> = project.layout.buildDirectory.dir("generated/buildInfo")
-  .also { it.get().asFile.createDirectory() }
+  .also { it.get().asFile.mkdirs() }
 
 sourceSets { getByName("main").java.srcDir(buildInfoGenDir) }
 

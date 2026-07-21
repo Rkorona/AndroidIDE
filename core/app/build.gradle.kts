@@ -24,8 +24,7 @@ import com.itsaky.androidide.plugins.AndroidIDEAssetsPlugin
 plugins {
   id("com.itsaky.androidide.core-app")
   id("com.android.application")
-  id("kotlin-android")
-  id("kotlin-kapt")
+  alias(libs.plugins.legacy.kapt)
   id("kotlin-parcelize")
   id("androidx.navigation.safeargs.kotlin")
   id("com.itsaky.androidide.desugaring")
@@ -110,6 +109,7 @@ dependencies {
 
   // AndroidX
   implementation(libs.androidx.splashscreen)
+  implementation(libs.androidx.localbroadcastmanager)
   implementation(libs.androidx.annotation)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.cardview)
@@ -131,7 +131,9 @@ dependencies {
 
   // Kotlin
   implementation(libs.androidx.core.ktx)
-  implementation(libs.common.kotlin)
+  implementation(libs.common.kotlin) {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
+  }
 
   // Dependencies in composite build
   implementation(libs.composite.appintro)

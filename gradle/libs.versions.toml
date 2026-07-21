@@ -19,8 +19,8 @@ markwon = "4.6.2"
 maven-publish-plugin = "0.37.0"
 logback = "1.5.38"
 realm = "10.18.0"
-benchmark = "1.4.1"
-benchmark-junit4 = "1.4.1"
+benchmark = "1.5.0-alpha07"
+benchmark-junit4 = "1.5.0-alpha07"
 
 [libraries]
 
@@ -96,6 +96,8 @@ androidx-splashscreen = { module = "androidx.core:core-splashscreen", version = 
 androidx-transition = { module = "androidx.transition:transition-ktx", version = "1.7.0" }
 androidx-nav-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-nav-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
+androidx-documentfile = { module = "androidx.documentfile:documentfile", version = "1.1.0" }
+androidx-localbroadcastmanager = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version = "1.1.0" }
 androidx-tracing = { module = "androidx.tracing:tracing", version = "1.3.0" }
 androidx-tracing-ktx = { module = "androidx.tracing:tracing-ktx", version = "1.3.0" }
 androidx-viewpager = { module = "androidx.viewpager:viewpager", version = "1.1.0" }
@@ -171,9 +173,11 @@ androidx-benchmark-junit4 = { group = "androidx.benchmark", name = "benchmark-ju
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "agp" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 maven-publish = { id = "com.vanniktech.maven.publish.base", version.ref = "maven-publish-plugin" }
 gradle-publish = { id = "com.gradle.plugin-publish", version = "2.1.1" }
 protobuf = { id = "com.google.protobuf", version = "0.10.0" }
 benchmark = { id = "androidx.benchmark", version.ref = "benchmark" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.5" }

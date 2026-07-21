@@ -23,7 +23,10 @@ import com.itsaky.androidide.build.config.KEY_BIN
 import com.itsaky.androidide.build.config.KEY_URL
 import org.gradle.api.Project
 import com.itsaky.androidide.build.config.signingKey
+import org.gradle.api.Action
 import org.gradle.api.invocation.Gradle
+import org.gradle.process.ExecSpec
+import org.gradle.kotlin.dsl.*
 import java.util.Base64
 
 /**
@@ -57,19 +60,22 @@ object SigningKeyUtils {
     // Username and password required to download the keystore
     val user = getEnvOrProp(AUTH_USER) ?: return
     val pass = getEnvOrProp(AUTH_PASS) ?: return
-
     logger.info("Downloading signing key...")
-    val result = exec {
-      var rootGradle: Gradle? = gradle
-      while (rootGradle?.parent != null) {
-        rootGradle = rootGradle.parent
-      }
-
-      workingDir(rootGradle!!.rootProject.projectDir)
-      commandLine("bash", "./scripts/download_key.sh", signingKey.absolutePath, url, user, pass)
+    var rootGradle: org.gradle.api.invocation.Gradle? = this.gradle
+    while (rootGradle?.parent != null) {
+      rootGradle = rootGradle.parent
     }
 
-    result.assertNormalExitValue()
+    val process = ProcessBuilder("bash", "./scripts/download_key.sh", signingKey.absolutePath, url, user, pass)
+      .directory(rootGradle!!.rootProject.projectDir)
+      .inheritIO()
+      .start()
+    
+    val exitCode = process.waitFor()
+    if (exitCode != 0) {
+      throw org.gradle.api.GradleException("Failed to download signing key, exit code: $exitCode")
+    }
+
   }
 
   internal fun Project.getEnvOrProp(key: String, warn: Boolean = true): String? {

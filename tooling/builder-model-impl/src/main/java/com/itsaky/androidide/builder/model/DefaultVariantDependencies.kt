@@ -17,6 +17,7 @@
 package com.itsaky.androidide.builder.model
 
 import com.android.builder.model.v2.ide.ArtifactDependencies
+import com.android.builder.model.v2.models.TestSuiteDependencies
 import com.android.builder.model.v2.models.VariantDependencies
 import java.io.Serializable
 
@@ -34,4 +35,5 @@ class DefaultVariantDependencies : VariantDependencies, Serializable {
   override var unitTestArtifact: DefaultArtifactDependencies? = null
   override val deviceTestArtifacts: Map<String, ArtifactDependencies> = emptyMap()
   override val hostTestArtifacts: Map<String, ArtifactDependencies> = emptyMap()
+  override val testSuiteArtifacts: Map<String, TestSuiteDependencies> = emptyMap()
 }

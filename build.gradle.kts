@@ -31,12 +31,14 @@ plugins {
   id("build-logic.root-project")
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.android.library) apply false
-  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.legacy.kapt) apply false
+  alias(libs.plugins.kotlin.kapt) apply false
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.maven.publish) apply false
   alias(libs.plugins.gradle.publish) apply false
   alias(libs.plugins.protobuf) apply false
   alias(libs.plugins.benchmark) apply false
+  alias(libs.plugins.shadow) apply false
 }
 
 buildscript {
@@ -63,6 +65,10 @@ subprojects {
 
   afterEvaluate {
     apply { plugin(AndroidIDEPlugin::class.java) }
+  }
+
+  configurations.all {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
   }
 
   project.version = rootProject.version

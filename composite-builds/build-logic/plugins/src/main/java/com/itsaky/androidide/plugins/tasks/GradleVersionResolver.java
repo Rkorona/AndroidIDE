@@ -33,18 +33,16 @@
 
 package com.itsaky.androidide.plugins.tasks;
 
-import static org.gradle.api.tasks.wrapper.internal.DefaultWrapperVersionsResources.LATEST;
-import static org.gradle.api.tasks.wrapper.internal.DefaultWrapperVersionsResources.NIGHTLY;
-import static org.gradle.api.tasks.wrapper.internal.DefaultWrapperVersionsResources.RELEASE_CANDIDATE;
-import static org.gradle.api.tasks.wrapper.internal.DefaultWrapperVersionsResources.RELEASE_NIGHTLY;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import org.gradle.api.GradleException;
 import org.gradle.api.resources.TextResource;
-import org.gradle.api.tasks.wrapper.internal.DefaultWrapperVersionsResources;
 import org.gradle.util.GradleVersion;
 
 class GradleVersionResolver {
@@ -69,18 +67,13 @@ class GradleVersionResolver {
     if (version == null) {
       return GradleVersion.current().getVersion();
     }
-    switch (version) {
-      case LATEST:
-        return getVersion(latest.asString(), version);
-      case NIGHTLY:
-        return getVersion(nightly.asString(), version);
-      case RELEASE_NIGHTLY:
-        return getVersion(releaseNightly.asString(), version);
-      case RELEASE_CANDIDATE:
-        return getVersion(releaseCandidate.asString(), version);
-      default:
-        return version;
-    }
+      return switch (version) {
+          case "latest" -> getVersion(latest.asString(), version);
+          case "nightly" -> getVersion(nightly.asString(), version);
+          case "release-nightly" -> getVersion(releaseNightly.asString(), version);
+          case "release-candidate" -> getVersion(releaseCandidate.asString(), version);
+          default -> version;
+      };
   }
 
   static String getVersion(String json, String placeHolder) {
@@ -96,7 +89,7 @@ class GradleVersionResolver {
   }
 
   static boolean isPlaceHolder(String version) {
-    return DefaultWrapperVersionsResources.PLACE_HOLDERS.contains(version);
+    return Arrays.asList("latest", "nightly", "release-nightly", "release-candidate").contains(version);
   }
 
   GradleVersion getGradleVersion() {
@@ -110,7 +103,7 @@ class GradleVersionResolver {
     if (!isPlaceHolder(gradleVersionString)) {
       this.gradleVersion = GradleVersion.version(gradleVersionString);
     }
-    if (this.gradleVersionString != gradleVersionString) {
+    if (!Objects.equals(this.gradleVersionString, gradleVersionString)) {
       this.gradleVersionString = gradleVersionString;
       this.gradleVersion = null;
     }
