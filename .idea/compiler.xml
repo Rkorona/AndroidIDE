@@ -21,7 +21,7 @@
         <module name="AndroidIDE.annotation.processors.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8">
+    <bytecodeTargetLevel target="21">
       <module name="AndroidIDE.actions" target="17" />
       <module name="AndroidIDE.annotation-ksp" target="17" />
       <module name="AndroidIDE.annotation-ksp.main" target="17" />
@@ -302,5 +302,21 @@
       <module name="composite-builds.plugins.main" target="17" />
       <module name="composite-builds.plugins.test" target="17" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AndroidIDE.annotation.processors-ksp" options="-proc:none" />
+      <module name="AndroidIDE.annotation.processors-ksp.main" options="-proc:none" />
+      <module name="AndroidIDE.annotation.processors-ksp.test" options="-proc:none" />
+      <module name="AndroidIDE.testing.commonTest" options="-proc:none" />
+      <module name="AndroidIDE.testing.commonTest.main" options="-proc:none" />
+      <module name="AndroidIDE.testing.commonTest.test" options="-proc:none" />
+      <module name="AndroidIDE.tooling.impl" options="-proc:none" />
+      <module name="AndroidIDE.tooling.impl.main" options="-proc:none" />
+      <module name="AndroidIDE.tooling.impl.test" options="-proc:none" />
+      <module name="AndroidIDE.utilities.lookup" options="-proc:none" />
+      <module name="AndroidIDE.utilities.lookup.main" options="-proc:none" />
+      <module name="AndroidIDE.utilities.lookup.test" options="-proc:none" />
+    </option>
   </component>
 </project>

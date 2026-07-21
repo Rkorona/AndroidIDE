@@ -27,9 +27,23 @@ import java.io.File
 object SdkUtils {
 
   fun AndroidComponentsExtension<*, *, *>.getAndroidJar(assertExists: Boolean = true): File {
-    val sdkDirectory = sdkComponents.sdkDirectory
-    val androidJar = File(sdkDirectory.get().asFile,
-      "platforms/android-${BuildConfig.compileSdk}/android.jar")
+    val sdkDirectory = sdkComponents.sdkDirectory.get().asFile
+    val platformsDir = File(sdkDirectory, "platforms")
+    val compileSdk = BuildConfig.compileSdk
+    
+    // Try exact match first
+    var androidJar = File(platformsDir, "android-$compileSdk/android.jar")
+    
+    // If not found, try to find a directory that starts with android-$compileSdk (e.g. android-37.0)
+    if (!androidJar.exists() && platformsDir.exists()) {
+        val matchingDir = platformsDir.listFiles { file -> 
+            file.isDirectory && (file.name == "android-$compileSdk" || file.name.startsWith("android-$compileSdk."))
+        }?.firstOrNull()
+        
+        if (matchingDir != null) {
+            androidJar = File(matchingDir, "android.jar")
+        }
+    }
 
     if (assertExists) {
       check(androidJar.exists() && androidJar.isFile) {

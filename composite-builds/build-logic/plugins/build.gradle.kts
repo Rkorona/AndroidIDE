@@ -15,6 +15,8 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -28,7 +30,11 @@ repositories {
 }
 
 tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = "17"
+  compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_17)
+    apiVersion.set(KotlinVersion.KOTLIN_2_0)
+    languageVersion.set(KotlinVersion.KOTLIN_2_0)
+  }
 }
 
 dependencies {

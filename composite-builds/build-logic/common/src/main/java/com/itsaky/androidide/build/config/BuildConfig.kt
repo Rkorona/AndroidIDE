@@ -28,7 +28,7 @@ object BuildConfig {
   const val packageName = "com.itsaky.androidide"
 
   /** The compile SDK version. */
-  const val compileSdk = 34
+  const val compileSdk = 36
 
   /** The minimum SDK version. */
   const val minSdk = 26
@@ -39,5 +39,5 @@ object BuildConfig {
   const val ndkVersion = "26.1.10909125"
 
   /** The source and target Java compatibility. */
-  val javaVersion = JavaVersion.VERSION_11
+  val javaVersion = JavaVersion.VERSION_21
 }
