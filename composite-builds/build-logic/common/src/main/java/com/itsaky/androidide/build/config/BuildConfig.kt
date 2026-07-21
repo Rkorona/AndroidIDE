@@ -38,6 +38,14 @@ object BuildConfig {
 
   const val ndkVersion = "29.0.14206865"
 
+  /**
+   * The build tools version to use for Android modules.
+   * Must match the version installed under $ANDROID_HOME/build-tools/.
+   * AGP 9.x defaults to 36.0.0 when this is not set; explicitly pinning to 37.0.0
+   * prevents AGP from auto-downloading build-tools 36 when only 37 is installed.
+   */
+  const val buildToolsVersion = "37.0.0"
+
   /** The source and target Java compatibility. */
   val javaVersion = JavaVersion.VERSION_21
 }

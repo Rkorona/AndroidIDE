@@ -28,6 +28,7 @@ subprojects {
   plugins.withId("com.android.library") {
     extensions.configure<LibraryExtension> {
       compileSdk = 37
+      buildToolsVersion = "37.0.0"
 
       defaultConfig.apply {
         minSdk = 36

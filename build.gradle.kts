@@ -50,6 +50,9 @@ buildscript {
       force(
         "org.bouncycastle:bcprov-jdk18on:1.78.1",
         "org.bouncycastle:bcpkix-jdk18on:1.78.1",
+        // AGP's SDK manager calls Charsets.toCharset(Charset,Charset) added in 2.15.0;
+        // force 2.16.1 so an older transitive version does not shadow it.
+        "commons-io:commons-io:2.16.1",
       )
     }
   }
@@ -58,6 +61,7 @@ buildscript {
     classpath(libs.nav.safe.args.gradle.plugin)
     classpath("org.bouncycastle:bcprov-jdk18on:1.78.1")
     classpath("org.bouncycastle:bcpkix-jdk18on:1.78.1")
+    classpath("commons-io:commons-io:2.16.1")
   }
 }
 

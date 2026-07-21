@@ -110,6 +110,7 @@ private fun Project.doConfigureAndroid(
   isAppModule: Boolean
 ) {
   android.compileSdk = BuildConfig.compileSdk
+  android.buildToolsVersion = BuildConfig.buildToolsVersion
 
   android.defaultConfig.apply {
     minSdk = BuildConfig.minSdk
