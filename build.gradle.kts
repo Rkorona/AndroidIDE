@@ -45,6 +45,10 @@ buildscript {
   dependencies {
     classpath(libs.kotlin.gradle.plugin)
     classpath(libs.nav.safe.args.gradle.plugin)
+    // AGP 9.3.0 requires BouncyCastle 1.78+ (BCObjectIdentifiers.xmss_SHAKE128_512ph).
+    // Force it here so the build classpath wins over any older version from the JDK.
+    classpath("org.bouncycastle:bcprov-jdk18on:1.78.1")
+    classpath("org.bouncycastle:bcpkix-jdk18on:1.78.1")
   }
 }
 
