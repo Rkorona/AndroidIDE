@@ -17,7 +17,7 @@
 
 package com.itsaky.androidide.plugins
 
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.ApplicationExtension
 import com.itsaky.androidide.build.config.KEY_ALIAS
 import com.itsaky.androidide.build.config.KEY_PASS
 import com.itsaky.androidide.build.config.KEY_STORE_PASS
@@ -51,30 +51,35 @@ class SigningConfigPlugin : Plugin<Project> {
         return
       }
 
-      // Create and apply the signing config
-      extensions.getByType(BaseExtension::class.java).let { extension ->
-        // Keystore credentials
-        val alias = getEnvOrProp(KEY_ALIAS)
-        val storePass = getEnvOrProp(KEY_STORE_PASS)
-        val keyPass = getEnvOrProp(KEY_PASS)
+      // Create and apply the signing config (only applicable to application modules)
+      val extension = extensions.findByType(ApplicationExtension::class.java) ?: run {
+        logger.warn("${javaClass.simpleName}: not an application module, skipping signing config.")
+        return
+      }
 
-        if (alias != null && storePass != null && keyPass != null && signingKey.exists()) {
-          val config = extension.signingConfigs.create("common") {
-            storeFile = signingKey
-            keyAlias = alias
-            storePassword = storePass
-            keyPassword = keyPass
-          }
+      // Keystore credentials
+      val alias = getEnvOrProp(KEY_ALIAS)
+      val storePass = getEnvOrProp(KEY_STORE_PASS)
+      val keyPass = getEnvOrProp(KEY_PASS)
 
-          extension.buildTypes.forEach { buildType ->
-            buildType.signingConfig = config
-          }
-        } else {
-          logger.warn(
-            "Signing info not configured. keystoreFile=$signingKey[exists=${signingKey.exists()}]"
-          )
-          null
+      if (alias != null && storePass != null && keyPass != null && signingKey.exists()) {
+        @Suppress("UNCHECKED_CAST")
+        val signingConfigs =
+          extension.signingConfigs as org.gradle.api.NamedDomainObjectContainer<com.android.build.api.dsl.ApkSigningConfig>
+        val config = signingConfigs.create("common") {
+          storeFile = signingKey
+          keyAlias = alias
+          storePassword = storePass
+          keyPassword = keyPass
         }
+
+        extension.buildTypes.forEach { buildType ->
+          buildType.signingConfig = config
+        }
+      } else {
+        logger.warn(
+          "Signing info not configured. keystoreFile=$signingKey[exists=${signingKey.exists()}]"
+        )
       }
     }
   }

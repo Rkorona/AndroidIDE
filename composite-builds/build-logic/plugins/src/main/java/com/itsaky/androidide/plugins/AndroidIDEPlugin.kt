@@ -17,7 +17,7 @@
 
 package com.itsaky.androidide.plugins
 
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.ApplicationExtension
 import com.itsaky.androidide.build.config.isFDroidBuild
 import com.itsaky.androidide.plugins.util.isAndroidModule
 import org.gradle.api.GradleException
@@ -46,12 +46,14 @@ class AndroidIDEPlugin : Plugin<Project> {
     }
 
     if (isFDroidBuild && project.plugins.hasPlugin("com.itsaky.androidide.core-app")) {
-      val baseExtension = extensions.getByType(BaseExtension::class.java)
-      logger.warn("Building for F-Droid with configuration:")
-      logger.warn("applicationId = ${baseExtension.defaultConfig.applicationId}")
-      logger.warn("versionName = ${baseExtension.defaultConfig.versionName}")
-      logger.warn("versionCode = ${baseExtension.defaultConfig.versionCode}")
-      logger.warn("--- x --- x ---")
+      val appExtension = extensions.findByType(ApplicationExtension::class.java)
+      if (appExtension != null) {
+        logger.warn("Building for F-Droid with configuration:")
+        logger.warn("applicationId = ${appExtension.defaultConfig.applicationId}")
+        logger.warn("versionName = ${appExtension.defaultConfig.versionName}")
+        logger.warn("versionCode = ${appExtension.defaultConfig.versionCode}")
+        logger.warn("--- x --- x ---")
+      }
     }
 
     val taskName = when {
