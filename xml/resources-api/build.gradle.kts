@@ -29,7 +29,8 @@ android {
 
 protobuf {
   protoc {
-    artifact = "/data/data/com.termux/files/usr/bin/protoc" // "com.google.protobuf:protoc:4.27.0"
+    artifact = "com.google.protobuf:protoc:4.27.0"
+    // path = "/data/data/com.termux/files/usr/bin/protoc"
   }
 
   generateProtoTasks {
