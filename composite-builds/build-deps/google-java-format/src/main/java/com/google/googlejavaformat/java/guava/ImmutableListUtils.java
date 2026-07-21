@@ -16,8 +16,10 @@
  */
 
 
-package com.google.common.collect;
+package com.google.googlejavaformat.java.guava;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import java.util.Iterator;
 import java.util.stream.Collector;
 
@@ -26,30 +28,12 @@ import java.util.stream.Collector;
  */
 public class ImmutableListUtils {
 
-  private static final Collector<Object, ?, ImmutableList<Object>> TO_IMMUTABLE_LIST =
-      Collector.of(
-          ImmutableList::builder,
-          ImmutableList.Builder::add,
-          ImmutableList.Builder::combine,
-          ImmutableList.Builder::build);
-
-  private static final Collector<Object, ?, ImmutableSet<Object>> TO_IMMUTABLE_SET =
-      Collector.of(
-          ImmutableSet::builder,
-          ImmutableSet.Builder::add,
-          ImmutableSet.Builder::combine,
-          ImmutableSet.Builder::build);
-
-  @SuppressWarnings({"rawtypes", "unchecked"})
   public static <E> Collector<E, ?, ImmutableList<E>> toImmutableList() {
-    return (Collector) TO_IMMUTABLE_LIST;
+    return ImmutableList.toImmutableList();
   }
 
-  // Sets
-
-  @SuppressWarnings({"rawtypes", "unchecked"})
   public static <E> Collector<E, ?, ImmutableSet<E>> toImmutableSet() {
-    return (Collector) TO_IMMUTABLE_SET;
+    return ImmutableSet.toImmutableSet();
   }
 
   /**
@@ -58,15 +42,6 @@ public class ImmutableListUtils {
    * @throws NullPointerException if {@code elements} contains a null element
    */
   public static <E> ImmutableList<E> copyOf(Iterator<? extends E> elements) {
-    // We special-case for 0 or 1 elements, but going further is madness.
-    if (!elements.hasNext()) {
-      return ImmutableList.of();
-    }
-    E first = elements.next();
-    if (!elements.hasNext()) {
-      return ImmutableList.of(first);
-    } else {
-      return new ImmutableList.Builder<E>().add(first).addAll(elements).build();
-    }
+    return ImmutableList.copyOf(elements);
   }
 }

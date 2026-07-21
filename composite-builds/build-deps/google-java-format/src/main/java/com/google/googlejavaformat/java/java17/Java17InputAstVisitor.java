@@ -14,8 +14,8 @@
 
 package com.google.googlejavaformat.java.java17;
 
-import static com.google.common.collect.ImmutableListUtils.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.googlejavaformat.java.guava.ImmutableListUtils.toImmutableList;
 
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
