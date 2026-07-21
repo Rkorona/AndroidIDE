@@ -36,7 +36,7 @@ object BuildConfig {
   /** The target SDK version. */
   const val targetSdk = 37
 
-  const val ndkVersion = "26.1.10909125"
+  const val ndkVersion = "27.3.13750724"
 
   /** The source and target Java compatibility. */
   val javaVersion = JavaVersion.VERSION_21
