@@ -31,7 +31,7 @@ repositories {
 
 tasks.withType<KotlinCompile> {
   compilerOptions {
-    jvmTarget.set(JvmTarget.JVM_17)
+    jvmTarget.set(JvmTarget.JVM_21)
     apiVersion.set(KotlinVersion.KOTLIN_2_0)
     languageVersion.set(KotlinVersion.KOTLIN_2_0)
   }
