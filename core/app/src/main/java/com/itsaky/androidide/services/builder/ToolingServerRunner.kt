@@ -112,8 +112,13 @@ internal class ToolingServerRunner(
         this.environment = envs
       }
 
-      // Process.pid() is Java 9+ / API 26+; avoids hidden-API reflection restrictions
-      pid = process.pid().toInt()
+      // Process.pid() is Java 9+ / API 26+ (always present since minSdk=36).
+      // Called via reflection because some SDK stubs omit it from java.lang.Process,
+      // causing an "Unresolved reference" compile error despite being available at runtime.
+      @Suppress("DiscouragedPrivateApi")
+      pid = runCatching {
+        (Process::class.java.getMethod("pid").invoke(process) as Long).toInt()
+      }.getOrNull()
 
       val inputStream = process.inputStream
       val outputStream = process.outputStream
