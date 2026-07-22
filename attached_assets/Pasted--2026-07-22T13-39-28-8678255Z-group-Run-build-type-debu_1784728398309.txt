@@ -1,0 +1,503 @@
+﻿2026-07-22T13:39:28.8678255Z ##[group]Run build_type=debug
+build_type=debug
+./gradlew :core:app:assemble${build_type^}
+shell: /usr/bin/bash -e {0}
+env:
+  GH_TOKEN: ***
+  IDE_SIGNING_ALIAS: ***
+  IDE_SIGNING_AUTH_PASS: 
+  IDE_SIGNING_AUTH_USER: 
+  IDE_SIGNING_KEY_PASS: ***
+  IDE_SIGNING_STORE_PASS: ***
+  IDE_SIGNING_URL: 
+  IDE_SIGNING_KEY_BIN: ***
+  ORG_GRADLE_PROJECT_mavenCentralUsername: 
+  ORG_GRADLE_PROJECT_mavenCentralPassword: 
+  ORG_GRADLE_PROJECT_signingInMemoryKey: 
+  ORG_GRADLE_PROJECT_signingInMemoryKeyId: 
+  ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: 
+  BUILD_JAVA_VERSION: 21
+  BUILD_JAVA_DIST: temurin
+  BUILD_IS_RELEASE: false
+  ReleaseAndroidIDE: false
+  JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.11-10/x64
+  JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.11-10/x64
+
+Welcome to Gradle 9.6.1!
+
+Here are the highlights of this ***:
+ - Improved Configuration Cache hit rates
+ - Additional CLI rendering options
+ - Important project hierarchy lookup deprecations
+
+For more details see https://docs.gradle.org/9.6.1/***-notes.html
+
+Starting a Gradle Daemon (subsequent builds will be faster)
+Type-safe project accessors is an incubating feature.
+Project version: v2.7.1-beta.internal.1+branch.dev.commit.ecb4321.timestamp.20260722133937
+
+> Configure project :build-logic:desugaring
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.3.21` that might work differently than in the requested version `2.4.10`.
+Using the `kotlin-dsl` plugin together with a different Kotlin version (for example, by using the Kotlin Gradle plugin (`kotlin(jvm)`)) in the same project is not recommended.
+
+See https://docs.gradle.org/9.6.1/userguide/kotlin_dsl.html#sec:kotlin-dsl_plugin for more details on how the `kotlin-dsl` plugin works (same applies to `embedded-kotlin`).
+It applies a certain version of the `org.jetbrains.kotlin.jvm` plugin and also add a dependency on the Kotlin Standard Library.
+
+Applying other version of the `org.jetbrains.kotlin.jvm` plugin in the build and/or adding dependencies to different versions of the Kotlin Standard Library can cause incompatibilities.
+See https://docs.gradle.org/9.6.1/userguide/kotlin_dsl.html#sec:kotlin
+
+> Configure project :build-logic:plugins
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.3.21` that might work differently than in the requested version `2.4.10`.
+Using the `kotlin-dsl` plugin together with a different Kotlin version (for example, by using the Kotlin Gradle plugin (`kotlin(jvm)`)) in the same project is not recommended.
+
+See https://docs.gradle.org/9.6.1/userguide/kotlin_dsl.html#sec:kotlin-dsl_plugin for more details on how the `kotlin-dsl` plugin works (same applies to `embedded-kotlin`).
+It applies a certain version of the `org.jetbrains.kotlin.jvm` plugin and also add a dependency on the Kotlin Standard Library.
+
+Applying other version of the `org.jetbrains.kotlin.jvm` plugin in the build and/or adding dependencies to different versions of the Kotlin Standard Library can cause incompatibilities.
+See https://docs.gradle.org/9.6.1/userguide/kotlin_dsl.html#sec:kotlin
+
+> Task :build-logic:common:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:desugaring:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:plugins:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:common:processResources NO-SOURCE
+> Task :build-logic:desugaring:pluginDescriptors
+> Task :build-logic:desugaring:processResources
+> Task :build-logic:plugins:extractPrecompiledScriptPluginPlugins
+> Task :build-logic:properties-parser:processResources NO-SOURCE
+> Task :build-logic:plugins:generateScriptPluginAdapters
+> Task :build-logic:plugins:pluginDescriptors
+> Task :build-logic:plugins:processResources
+> Task :build-deps-common:desugaring-core:compileJava
+> Task :build-deps-common:desugaring-core:processResources NO-SOURCE
+> Task :build-deps-common:desugaring-core:classes
+> Task :build-deps-common:desugaring-core:jar
+
+> Task :build-logic:desugaring:compileKotlin
+w: ⚠️ Unsupported Kotlin plugin version
+The Kotlin Gradle plugin detected incompatible Kotlin versions in the `kotlin-dsl` plugin. This may lead to a compilation failure.
+
+Detected unsupported Kotlin versions in `kotlin-dsl`:
+- API version: 2.0
+- language version: 2.0
+
+The `kotlin-dsl` plugin relies on the Gradle-embedded Kotlin version. Using `kotlin-dsl` plugin together with a different Kotlin version (for example by using Kotlin Gradle plugin (`kotlin(jvm)`)) in the same module is not recommended.
+
+If you are writing a convention plugin (or a precompiled script plugin in general) it’s recommended to only use the `kotlin-dsl` plugin and use the embedded Kotlin version. If you are writing a binary plugin it’s recommended to not use the `kotlin-dsl` plugin and use the Kotlin Gradle plugin (`kotlin(jvm)`).
+To upgrade the embedded Kotlin Language version a Gradle update is required. Please find the required Gradle version in the following table:
+https://docs.gradle.org/current/userguide/compatibility.html#kotlin
+
+You can configure your module to use 2.2 or higher overriding `kotlin-dsl` behavior using a following snippet:
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+    }
+}
+Note that this may lead to some hard to predict behavior and in general should be avoided, see documentation for more information.
+Solutions:
+ * Do not use `kotlin(jvm)` explicitly in this module and allow `kotlin-dsl` to auto-provide a compatible version on its own. If you prefer staying explicit, consider using the `embeddedKotlinVersion` constant.
+ * Do not use `kotlin-dsl` in this module.
+ * Configure your module to use 2.2 or higher overriding `kotlin-dsl` behavior (unrecommended).
+See https://kotl.in/gradle/kotlin-dsl-version-compatibility for more details.
+
+w: Language version 2.0 is deprecated and its support will be removed in a future version of Kotlin. Update the version to 2.2.
+
+> Task :build-logic:common:compileKotlin
+> Task :build-logic:common:compileJava NO-SOURCE
+> Task :build-logic:properties-parser:compileJava
+> Task :build-logic:desugaring:compileJava NO-SOURCE
+> Task :build-logic:plugins:generateExternalPluginSpecBuilders
+> Task :build-logic:common:classes UP-TO-DATE
+> Task :build-logic:common:jar
+> Task :build-logic:desugaring:classes
+> Task :build-logic:desugaring:jar
+> Task :build-logic:properties-parser:classes
+> Task :build-logic:properties-parser:jar
+
+> Task :build-logic:plugins:compilePluginsBlocks
+w: ⚠️ Unsupported Kotlin plugin version
+The Kotlin Gradle plugin detected incompatible Kotlin versions in the `kotlin-dsl` plugin. This may lead to a compilation failure.
+
+Detected unsupported Kotlin versions in `kotlin-dsl`:
+- API version: 2.0
+- language version: 2.0
+
+The `kotlin-dsl` plugin relies on the Gradle-embedded Kotlin version. Using `kotlin-dsl` plugin together with a different Kotlin version (for example by using Kotlin Gradle plugin (`kotlin(jvm)`)) in the same module is not recommended.
+
+If you are writing a convention plugin (or a precompiled script plugin in general) it’s recommended to only use the `kotlin-dsl` plugin and use the embedded Kotlin version. If you are writing a binary plugin it’s recommended to not use the `kotlin-dsl` plugin and use the Kotlin Gradle plugin (`kotlin(jvm)`).
+To upgrade the embedded Kotlin Language version a Gradle update is required. Please find the required Gradle version in the following table:
+https://docs.gradle.org/current/userguide/compatibility.html#kotlin
+
+You can configure your module to use 2.2 or higher overriding `kotlin-dsl` behavior using a following snippet:
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+    }
+}
+Note that this may lead to some hard to predict behavior and in general should be avoided, see documentation for more information.
+Solutions:
+ * Do not use `kotlin(jvm)` explicitly in this module and allow `kotlin-dsl` to auto-provide a compatible version on its own. If you prefer staying explicit, consider using the `embeddedKotlinVersion` constant.
+ * Do not use `kotlin-dsl` in this module.
+ * Configure your module to use 2.2 or higher overriding `kotlin-dsl` behavior (unrecommended).
+See https://kotl.in/gradle/kotlin-dsl-version-compatibility for more details.
+
+w: Language version 2.0 is deprecated and its support will be removed in a future version of Kotlin. Update the version to 2.2.
+
+> Task :build-logic:plugins:generatePrecompiledScriptPluginAccessors
+
+> Task :build-logic:plugins:compileKotlin
+w: ⚠️ Unsupported Kotlin plugin version
+The Kotlin Gradle plugin detected incompatible Kotlin versions in the `kotlin-dsl` plugin. This may lead to a compilation failure.
+
+Detected unsupported Kotlin versions in `kotlin-dsl`:
+- API version: 2.0
+- language version: 2.0
+
+The `kotlin-dsl` plugin relies on the Gradle-embedded Kotlin version. Using `kotlin-dsl` plugin together with a different Kotlin version (for example by using Kotlin Gradle plugin (`kotlin(jvm)`)) in the same module is not recommended.
+
+If you are writing a convention plugin (or a precompiled script plugin in general) it’s recommended to only use the `kotlin-dsl` plugin and use the embedded Kotlin version. If you are writing a binary plugin it’s recommended to not use the `kotlin-dsl` plugin and use the Kotlin Gradle plugin (`kotlin(jvm)`).
+To upgrade the embedded Kotlin Language version a Gradle update is required. Please find the required Gradle version in the following table:
+https://docs.gradle.org/current/userguide/compatibility.html#kotlin
+
+You can configure your module to use 2.2 or higher overriding `kotlin-dsl` behavior using a following snippet:
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+    }
+}
+Note that this may lead to some hard to predict behavior and in general should be avoided, see documentation for more information.
+Solutions:
+ * Do not use `kotlin(jvm)` explicitly in this module and allow `kotlin-dsl` to auto-provide a compatible version on its own. If you prefer staying explicit, consider using the `embeddedKotlinVersion` constant.
+ * Do not use `kotlin-dsl` in this module.
+ * Configure your module to use 2.2 or higher overriding `kotlin-dsl` behavior (unrecommended).
+See https://kotl.in/gradle/kotlin-dsl-version-compatibility for more details.
+
+w: Language version 2.0 is deprecated and its support will be removed in a future version of Kotlin. Update the version to 2.2.
+w: file:///home/runner/work/AndroidIDE/AndroidIDE/composite-builds/build-logic/plugins/src/main/java/com/itsaky/androidide/plugins/AndroidIDEPlugin.kt:66:19 'fun create(name: String, configuration: Action<in Task>): Task' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/AndroidIDE/AndroidIDE/composite-builds/build-logic/plugins/src/main/java/com/itsaky/androidide/plugins/conf/MavenPublishConf.kt:131:9 'fun <reified T : Task> TaskContainer.create(name: String, noinline configureAction: T.() -> Unit): T' is deprecated. Use register instead. See https://docs.gradle.org/current/userguide/task_configuration_avoidance.html for more information.
+w: file:///home/runner/work/AndroidIDE/AndroidIDE/composite-builds/build-logic/plugins/src/main/java/com/itsaky/androidide/plugins/util/DownloadUtils.kt:72:22 'constructor(p0: String!): URL' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/AndroidIDE/AndroidIDE/composite-builds/build-logic/plugins/src/main/java/com/itsaky/androidide/plugins/util/SigningKeyUtils.kt:84:23 'val properties: (Mutable)Map<String, out Any?>' is deprecated. Deprecated in Java.
+Note: Some input files use or override a deprecated API.
+
+Note: Recompile with -Xlint:deprecation for details.
+> Task :build-logic:plugins:compileJava
+
+> Task :build-logic:plugins:classes
+> Task :build-logic:plugins:jar
+
+> Configure project :core:actions
+WARNING: The option setting 'android.jetifier.ignorelist=common-30.2.2.jar' is experimental.
+Add android.sync.suppressAgpWarnings=UNSUPPORTED_PROJECT_OPTION_USE to the gradle.properties file to suppress this warning.
+Simple version name is '2.7.1-beta' (from version v2.7.1-beta.internal.1+branch.dev.commit.ecb4321.timestamp.20260722133937)
+Version code is '271' (from version 2.7.1-beta).
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :build-deps:appintro
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :build-deps:google-java-format
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Task :build-deps:logback-core:compileJava
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/CoreConstants.java:224: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+    public static final int UNBOUND_HISTORY = UNBOUNDED_HISTORY;
+                            ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/pattern/PatternLayoutEncoderBase.java:55: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+    public void setOutputPatternAsPresentationHeader(boolean outputPatternAsHeader) {
+                ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/pattern/PatternLayoutBase.java:108: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+    protected void setContextForConverters(Converter<E> head) {
+                   ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/util/StatusPrinter.java:29: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+public class StatusPrinter {
+       ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/util/ExecutorServiceUtil.java:70: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+    static public ExecutorService newExecutorService() {
+                                  ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/util/OptionHelper.java:262: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+    public static boolean isEmpty(String str) {
+                          ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/util/Loader.java:48: warning: [removal] AccessController in java.security has been deprecated and marked for removal
+                    AccessController.checkPermission(new RuntimePermission("getClassLoader"));
+                    ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/util/Loader.java:45: warning: [removal] AccessController in java.security has been deprecated and marked for removal
+        HAS_GET_CLASS_LOADER_PERMISSION = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+                                          ^
+/home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/util/Loader.java:159: warning: [removal] AccessController in java.security has been deprecated and marked for removal
+            return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                   ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /home/runner/work/AndroidIDE/AndroidIDE/composite-builds/external/logback-android/logback-core/src/main/java/ch/qos/logback/core/joran/sanity/SanityChecker.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+9 warnings
+
+> Task :build-deps:logback-core:processResources NO-SOURCE
+> Task :build-deps:logback-core:classes
+> Task :build-deps:logback-core:jar
+
+> Configure project :core:common
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :core:indexing-api
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :core:indexing-core
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :core:lsp-api
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :core:lsp-models
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :core:projects
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :core:resources
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :editor:api
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :editor:impl
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :editor:treesitter
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :event:eventbus-android
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :event:eventbus-events
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :java:javac-services
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :java:lsp
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :logging:idestats
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :logging:logsender
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :termux:application
+DefaultProject_Decorated: not an application module, skipping signing config.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+
+> Configure project :termux:emulator
+DefaultProject_Decorated: not an application module, skipping signing config.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+
+> Configure project :termux:shared
+DefaultProject_Decorated: not an application module, skipping signing config.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+WARNING: C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+Add android.sync.suppressAgpWarnings=EXTERNAL_NATIVE_BUILD_CONFIGURATION to the gradle.properties file to suppress this warning.
+C/C++: Platform version 36 is beyond 35, the maximum API level supported by this NDK. Using 35 instead.
+
+> Configure project :termux:view
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :testing:androidTest
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :testing:benchmarks
+DefaultProject_Decorated: not an application module, skipping signing config.
+WARNING: BuildType 'debug' is both debuggable and has 'isMinifyEnabled' set to true.
+All code optimizations and obfuscation are disabled for debuggable builds.
+Add android.sync.suppressAgpWarnings=DEBUGGABLE_AND_MINIFIED_ENABLED to the gradle.properties file to suppress this warning.
+
+> Configure project :testing:lspTest
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :testing:unitTest
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :utilities:flashbar
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :utilities:preferences
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :utilities:templates-api
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :utilities:templates-impl
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :utilities:treeview
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :utilities:uidesigner
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :utilities:xml-inflater
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :xml:aaptcompiler
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :xml:lsp
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :xml:resources-api
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+> Configure project :xml:utils
+DefaultProject_Decorated: not an application module, skipping signing config.
+
+[Incubating] Problems report is available at: file:///home/runner/work/AndroidIDE/AndroidIDE/build/reports/problems/problems-report.html
+
+22 actionable tasks: 22 executed
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Could not determine the dependencies of task ':core:app:mergeDebugAssets'.
+> Could not create task ':core:app:generateDebugInitScript'.
+   > Failed to download: https://s01.oss.sonatype.org/content/repositories/snapshots//com/itsaky/androidide/gradle-plugin/maven-metadata.xml
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 3s
+Process completed with exit code 1.
