@@ -439,7 +439,7 @@ class GradleBuildService : Service(), BuildService, IToolingApiClient,
     }
 
     if (toolingServerRunner!!.isStarted && listener != null) {
-      listener.onServerStarted(toolingServerRunner!!.pid!!)
+      listener.onServerStarted(toolingServerRunner!!.pid ?: -1)
     } else {
       setServerListener(listener)
     }

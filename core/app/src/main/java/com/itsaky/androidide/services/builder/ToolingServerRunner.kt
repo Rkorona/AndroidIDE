@@ -115,9 +115,10 @@ internal class ToolingServerRunner(
       // Process.pid() is Java 9+ / API 26+ (always present since minSdk=36).
       // Called via reflection because some SDK stubs omit it from java.lang.Process,
       // causing an "Unresolved reference" compile error despite being available at runtime.
+      // Cast through Number to handle both Long (standard JVM) and Integer (some Android impls).
       @Suppress("DiscouragedPrivateApi")
       pid = runCatching {
-        (Process::class.java.getMethod("pid").invoke(process) as Long).toInt()
+        (Process::class.java.getMethod("pid").invoke(process) as Number).toInt()
       }.getOrNull()
 
       val inputStream = process.inputStream
@@ -150,7 +151,8 @@ internal class ToolingServerRunner(
 
       isStarted = true
 
-      listener?.onServerStarted(pid!!)
+      // Use -1 as sentinel if PID could not be determined via reflection
+      listener?.onServerStarted(pid ?: -1)
 
       // we don't need the listener anymore
       // also, this might be a reference to the activity
