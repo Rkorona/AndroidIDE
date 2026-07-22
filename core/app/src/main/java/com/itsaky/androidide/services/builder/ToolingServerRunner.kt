@@ -26,7 +26,6 @@ import com.itsaky.androidide.tooling.api.IToolingApiClient
 import com.itsaky.androidide.tooling.api.IToolingApiServer
 import com.itsaky.androidide.tooling.api.util.ToolingApiLauncher
 import com.itsaky.androidide.utils.Environment
-import com.termux.shared.reflection.ReflectionUtils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -73,8 +72,15 @@ internal class ToolingServerRunner(
     var process: Process?
     try {
       log.info("Starting tooling API server...")
-      val command = listOf(
-        Environment.JAVA.absolutePath, // The 'java' binary executable
+      val javaPath = Environment.JAVA.absolutePath
+      val command = buildList {
+        // Android 16 (API 36): W^X + SELinux policy blocks execve() on app-private
+        // binaries. Route through /system/bin/linker64 (always trusted) so the
+        // dynamic linker mmap-loads the JVM binary instead of the kernel exec-ing it.
+        if (android.os.Build.VERSION.SDK_INT >= 36) {
+          add("/system/bin/linker64")
+        }
+        add(javaPath)
         // Allow reflective access to private members of classes in the following
         // packages:
         // - java.lang
@@ -89,12 +95,12 @@ internal class ToolingServerRunner(
         // these objects are reflectively accessed by Gson. If we do no specify
         // '--add-opens' for 'java.io' (for java.io.File) package, JVM will throw an
         // InaccessibleObjectException.
-        "--add-opens", "java.base/java.lang=ALL-UNNAMED", "--add-opens",
-        "java.base/java.util=ALL-UNNAMED", "--add-opens",
-        "java.base/java.io=ALL-UNNAMED", // The JAR file to run
-        "-D${CoreConstants.STATUS_LISTENER_CLASS_KEY}=com.itsaky.androidide.tooling.impl.util.LogbackStatusListener",
-        "-jar", Environment.TOOLING_API_JAR.absolutePath
-      )
+        add("--add-opens"); add("java.base/java.lang=ALL-UNNAMED")
+        add("--add-opens"); add("java.base/java.util=ALL-UNNAMED")
+        add("--add-opens"); add("java.base/java.io=ALL-UNNAMED")
+        add("-D${CoreConstants.STATUS_LISTENER_CLASS_KEY}=com.itsaky.androidide.tooling.impl.util.LogbackStatusListener")
+        add("-jar"); add(Environment.TOOLING_API_JAR.absolutePath)
+      }
 
       process = executeProcessAsync {
         this.command = command
@@ -106,8 +112,8 @@ internal class ToolingServerRunner(
         this.environment = envs
       }
 
-      pid = ReflectionUtils.getDeclaredField(process::class.java, "pid")?.get(process) as Int?
-      pid ?: throw IllegalStateException("Unable to get process ID")
+      // Process.pid() is Java 9+ / API 26+; avoids hidden-API reflection restrictions
+      pid = process.pid().toInt()
 
       val inputStream = process.inputStream
       val outputStream = process.outputStream

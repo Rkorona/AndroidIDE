@@ -1,0 +1,13 @@
+22-07 15:31:46.915  INFO [main] GradleBuildService:  Showing notification to user...
+22-07 15:31:46.952  INFO [main] BaseEditorActivity:  Connected to Gradle build service
+22-07 15:31:46.953  INFO [DefaultDispatcher-worker-3] ToolingServerRunner:  Starting tooling API server...
+22-07 15:31:46.957 ERROR [DefaultDispatcher-worker-3] ToolingServerRunner:  Unable to start tooling API server
+22-07 15:31:54.381 DEBUG [DefaultDispatcher-worker-3] StopWatch:  Action 'ide.editor.syncProject' completed in 11ms
+22-07 15:31:54.385 DEBUG [main] BaseEditorActivity:  No variant selection information available. Default build variants will be selected.
+22-07 15:31:54.385 DEBUG [main] BaseEditorActivity:  Is project initialized: false
+22-07 15:31:54.386 DEBUG [main] BaseEditorActivity:  onBuildStatusChanged: isInitializing: true, isBuildInProgress: false
+22-07 15:32:09.044 DEBUG [main] StopWatch:  Action 'ide.editor.colorScheme.reload' completed in 14ms
+22-07 15:32:10.344 DEBUG [DefaultDispatcher-worker-3] StopWatch:  Action 'ide.editor.syncProject' completed in 8ms
+22-07 15:32:10.351 DEBUG [main] BaseEditorActivity:  No variant selection information available. Default build variants will be selected.
+22-07 15:32:10.352 DEBUG [main] BaseEditorActivity:  Is project initialized: false
+22-07 15:32:10.352 DEBUG [main] BaseEditorActivity:  onBuildStatusChanged: isInitializing: true, isBuildInProgress: false

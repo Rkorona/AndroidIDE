@@ -1,6 +1,6 @@
 ---
-name: Android 16 exec fix for AndroidIDE terminal
-description: Three-layer approach to fix execve Permission denied on Android 16 (API 36) in AndroidIDE's embedded terminal
+name: Android 16 exec fix (terminal + tooling server)
+description: Linker64 trick must be applied anywhere app-private ELF binaries are exec'd on Android 16 (API 36), including Java ProcessBuilder calls
 ---
 
 # Android 16 exec fix
@@ -42,6 +42,18 @@ LD_PRELOAD is preserved in envp so every child process inherits the wrapper.
 - termux/application/src/main/cpp/exec-wrapper.c (Layer 3 — new file)
 - termux/application/src/main/cpp/Android.mk (builds libandroidide-exec-wrapper)
 - termux/shared/src/main/java/com/termux/shared/termux/shell/command/environment/TermuxShellEnvironment.java (Layer 3 LD_PRELOAD injection)
+
+## LD_PRELOAD wrapper does NOT cover Java ProcessBuilder calls
+Layer 3 (LD_PRELOAD) only intercepts execve() inside already-running processes (bash and children).
+Java's `ProcessBuilder.start()` calls `fork()+execve()` from the JVM itself — the wrapper isn't
+loaded there. Any Java code that directly exec-s an app-private binary must apply the linker64 trick
+at the command-list level:
+  if (SDK_INT >= 36) prepend("/system/bin/linker64") to command
+Fixed in: ToolingServerRunner.kt (for JVM/tooling-api-all.jar launch)
+
+## PID retrieval
+`ReflectionUtils.getDeclaredField(process, "pid")` is blocked by hidden-API restrictions on API 28+.
+Use `process.pid().toInt()` (Java 9+ / API 26+) instead. Fixed in ToolingServerRunner.kt.
 
 ## Testing
 - MUST clear app data before testing — TermuxInstaller skips if prefix already exists
