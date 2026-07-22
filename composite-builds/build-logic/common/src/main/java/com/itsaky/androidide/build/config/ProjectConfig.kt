@@ -124,17 +124,24 @@ val Project.publishingVersion: String
 /**
  * The version name which is used to download the artifacts at runtime.
  *
- * The value varies based on the following cases :
- * - For CI and F-Droid builds: same as [publishingVersion].
- * - For local builds: `latest.integration` to make sure that Gradle downloads the latest snapshots.
+ * The value varies based on the following cases:
+ * - For F-Droid builds: the exact [publishingVersion] (always fully published).
+ * - For release (non-SNAPSHOT) CI builds on the main branch: the exact [publishingVersion]
+ *   (published to Sonatype during the CI release pipeline).
+ * - For SNAPSHOT builds (local dev and non-main CI branches): queries Sonatype for the latest
+ *   actually-published snapshot. Non-main CI builds embed a commit-hash SNAPSHOT version that
+ *   is never uploaded to Sonatype, so using it directly causes "Could not find artifact" errors
+ *   in every user project initialized by that build of the IDE.
  */
 val Project.downloadVersion: String
   get() {
-    return if (CI.isCiBuild || isFDroidBuild) {
-      publishingVersion
-    } else {
-      // sometimes, when working locally, Gradle fails to download the latest snapshot version
-      // this may cause issues while initializing the project in AndroidIDE
-      VersionUtils.getLatestSnapshotVersion("gradle-plugin")
-    }
+    // F-Droid releases are always published with the exact version.
+    if (isFDroidBuild) return publishingVersion
+
+    // Main-branch CI (and stable) builds publish the artifact with its exact version.
+    if (!publishingVersion.endsWith("-SNAPSHOT")) return publishingVersion
+
+    // For SNAPSHOT builds (local and non-main CI), resolve the latest version that actually
+    // exists in Sonatype rather than the exact commit-hash SNAPSHOT which is rarely published.
+    return VersionUtils.getLatestSnapshotVersion("gradle-plugin")
   }

@@ -1,0 +1,39 @@
+Starting build...
+Warning: Unable to set daemon's environment variables to match the client because: 
+  There is no native integration with this operating environment.
+  If the daemon was started with a significantly different environment from the client, and your build 
+  relies on environment variables, you may experience unexpected behavior.
+
+[Incubating] Problems report is available at: file:///storage/emulated/0/AndroidIDEProjects/axiom/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Could not resolve all artifacts for configuration 'classpath'.
+> Could not resolve all artifacts for configuration 'classpath'.
+   > Could not find com.itsaky.androidide:gradle-plugin:2.7.1-beta-2f60b8c87-SNAPSHOT.
+     Searched in the following locations:
+       - file:/data/data/com.itsaky.androidide/files/home/.m2/repository/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/maven-metadata.xml
+       - file:/data/data/com.itsaky.androidide/files/home/.m2/repository/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/gradle-plugin-2.7.1-beta-2f60b8c87-SNAPSHOT.pom
+       - https://s01.oss.sonatype.org/content/repositories/snapshots/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/maven-metadata.xml
+       - https://s01.oss.sonatype.org/content/repositories/snapshots/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/gradle-plugin-2.7.1-beta-2f60b8c87-SNAPSHOT.pom
+       - https://s01.oss.sonatype.org/content/groups/public/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/maven-metadata.xml
+       - https://s01.oss.sonatype.org/content/groups/public/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/gradle-plugin-2.7.1-beta-2f60b8c87-SNAPSHOT.pom
+       - https://dl.google.com/dl/android/maven2/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/maven-metadata.xml
+       - https://dl.google.com/dl/android/maven2/com/itsaky/androidide/gradle-plugin/2.7.1-beta-2f60b8c87-SNAPSHOT/gradle-plugin-2.7.1-beta-2f60b8c87-SNAPSHOT.pom
+     Required by:
+         initialization script '/data/user/0/com.itsaky.androidide/files/home/.androidide/init/init.gradle'
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+CONFIGURE FAILED in 4s
