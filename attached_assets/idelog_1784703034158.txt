@@ -1,0 +1,21 @@
+java.lang.IllegalArgumentException: com.itsaky.androidide: Targeting S+ (version 31 and above) requires that one of FLAG_IMMUTABLE or FLAG_MUTABLE be specified when creating a PendingIntent.
+Strongly consider using FLAG_IMMUTABLE, only use FLAG_MUTABLE if some functionality depends on the PendingIntent being mutable, e.g. if it needs to be used with inline replies or bubbles.
+	at android.app.PendingIntent.checkPendingIntent(PendingIntent.java:468)
+	at android.app.PendingIntent.getActivityAsUser(PendingIntent.java:585)
+	at android.app.PendingIntent.getActivity(PendingIntent.java:570)
+	at android.app.PendingIntent.getActivity(PendingIntent.java:534)
+	at com.itsaky.androidide.services.builder.GradleBuildService.buildNotification(r8-map-id-d5e743c18a84304d247f29b24c8902302a38ffb2550aa90357e409901ea74fe3:34)
+	at com.itsaky.androidide.services.builder.GradleBuildService.onCreate(r8-map-id-d5e743c18a84304d247f29b24c8902302a38ffb2550aa90357e409901ea74fe3:61)
+	at android.app.ActivityThread.handleCreateService(ActivityThread.java:6283)
+ Caused by: java.lang.RuntimeException: Unable to create service com.itsaky.androidide.services.builder.GradleBuildService
+	at android.app.ActivityThread.handleCreateService(ActivityThread.java:6294)
+	at android.app.ActivityThread.-$$Nest$mhandleCreateService(ActivityThread.java:0)
+	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:3059)
+	at android.os.Handler.dispatchMessage(Handler.java:132)
+	at android.os.Looper.dispatchMessage(Looper.java:358)
+	at android.os.Looper.loopOnce(Looper.java:288)
+	at android.os.Looper.loop(Looper.java:392)
+	at android.app.ActivityThread.main(ActivityThread.java:10346)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:638)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:972)
