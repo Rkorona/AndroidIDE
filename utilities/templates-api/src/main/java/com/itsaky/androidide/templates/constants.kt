@@ -21,9 +21,13 @@ package com.itsaky.androidide.templates
  * @author Akash Yadav
  */
 
-const val ANDROID_GRADLE_PLUGIN_VERSION = "8.0.0"
-const val GRADLE_DISTRIBUTION_VERSION = "8.1.1"
-const val KOTLIN_VERSION = "1.8.21"
+// AGP 8.6.x requires Gradle 8.7+; Kotlin 2.0.x is stable with these versions.
+// Gradle must be >= 8.4: that's when ASM was upgraded to support Java 21 class files
+// (major version 65). Older Gradle versions throw "Unsupported class file major version 65"
+// when the tooling server JAR (compiled to Java 21) is loaded during project initialization.
+const val ANDROID_GRADLE_PLUGIN_VERSION = "8.6.1"
+const val GRADLE_DISTRIBUTION_VERSION = "8.9"
+const val KOTLIN_VERSION = "2.0.21"
 
 val TARGET_SDK_VERSION = Sdk.Tiramisu
 val COMPILE_SDK_VERSION = Sdk.Tiramisu
