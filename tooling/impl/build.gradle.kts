@@ -80,11 +80,12 @@ dependencies {
 }
 
 // The tooling server JAR is executed by AndroidIDE's bundled JDK 17.
-// Override the root project's JVM 21 defaults to ensure compatibility.
+// Override compile tasks to target Java 17 without changing Gradle's
+// org.gradle.jvm.version variant attribute (which would break dependency resolution).
 afterEvaluate {
-  configure<org.gradle.api.plugins.JavaPluginExtension> {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+  tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
