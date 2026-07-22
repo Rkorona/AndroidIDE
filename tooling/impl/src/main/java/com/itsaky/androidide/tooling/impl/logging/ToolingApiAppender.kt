@@ -18,6 +18,7 @@
 package com.itsaky.androidide.tooling.impl.logging
 
 import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.classic.spi.ThrowableProxyUtil
 import ch.qos.logback.core.AppenderBase
 import com.itsaky.androidide.tooling.api.messages.LogMessageParams
 import com.itsaky.androidide.tooling.impl.Main
@@ -34,11 +35,22 @@ class ToolingApiAppender : AppenderBase<ILoggingEvent>() {
       return
     }
 
+    // Include exception stacktrace when present so callers can diagnose failures.
+    // eventObject.formattedMessage contains only the message text; the Throwable is
+    // stored separately in throwableProxy and must be appended explicitly.
+    val message = buildString {
+      append(eventObject.formattedMessage)
+      eventObject.throwableProxy?.let { proxy ->
+        append('\n')
+        append(ThrowableProxyUtil.asString(proxy))
+      }
+    }
+
     Main.client?.logMessage(
       LogMessageParams(
         eventObject.level.levelStr[0],
         eventObject.loggerName,
-        eventObject.formattedMessage
+        message
       )
     )
   }
