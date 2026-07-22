@@ -35,6 +35,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.URLSpan
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
 import com.github.appintro.SlidePolicy
@@ -273,8 +274,9 @@ class IdeSetupConfigurationFragment : OnboardingFragment(), SlidePolicy {
       }
     }
 
-    requireContext().registerReceiver(backgroundDataRestrictionReceiver!!,
-      IntentFilter(ConnectivityManager.ACTION_RESTRICT_BACKGROUND_CHANGED))
+    ContextCompat.registerReceiver(requireContext(), backgroundDataRestrictionReceiver!!,
+      IntentFilter(ConnectivityManager.ACTION_RESTRICT_BACKGROUND_CHANGED),
+      ContextCompat.RECEIVER_NOT_EXPORTED)
   }
 
   private fun removeNetworkMonitors() {
