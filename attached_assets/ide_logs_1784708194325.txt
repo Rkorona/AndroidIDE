@@ -1,0 +1,10 @@
+22-07 16:14:12.619  INFO [main] GradleBuildService:  Showing notification to user...
+22-07 16:14:12.647  INFO [main] BaseEditorActivity:  Connected to Gradle build service
+22-07 16:14:12.648  INFO [DefaultDispatcher-worker-7] ToolingServerRunner:  Starting tooling API server...
+22-07 16:14:12.655 ERROR [DefaultDispatcher-worker-7] ToolingServerRunner:  Unable to start tooling API server
+22-07 16:14:12.784 ERROR [DefaultDispatcher-worker-6] ToolingApiErrorStream:  Error: LinkageError occurred while loading main class com.itsaky.androidide.tooling.impl.Main
+22-07 16:14:12.785 ERROR [DefaultDispatcher-worker-6] ToolingApiErrorStream:  	java.lang.UnsupportedClassVersionError: com/itsaky/androidide/tooling/impl/Main has been compiled by a more recent version of the Java Runtime (class file version 65.0), this version of the Java Runtime only recognizes class file versions up to 61.0
+22-07 16:14:12.792  INFO [DefaultDispatcher-worker-3] ToolingServerRunner:  Tooling API process exited with code : 1
+22-07 16:14:12.792  INFO [DefaultDispatcher-worker-3] ToolingServerRunner:  Destroying Tooling API process...
+22-07 16:14:23.172 DEBUG [main] BaseEditorActivity:  [onPause] No opened files. Opened files cache reset to null.
+22-07 16:15:52.147 DEBUG [ForkJoinPool.commonPool-worker-3] BootClasspathProvider:  Indexing boot classpath: /data/user/0/com.itsaky.androidide/files/home/.androidide/android.jar

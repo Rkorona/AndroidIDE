@@ -1,3 +1,4 @@
 - [Android 16 exec fix](android16-exec-fix.md) — Three-layer fix for Android 16 W^X/SELinux exec denial in AndroidIDE terminal
 - [JdkUtils release-file detection](jdkutils-release-file-detection.md) — findJavaInstallations() must use release file, not exec; exec path causes onboarding loop on Android 16
 - [TemplateProvider services file](template-provider-services-file.md) — @AutoService alone unreliable for library modules; add manual META-INF/services in core/app or MainActivity crashes permanently
+- [Tooling server JVM target](tooling-server-jvm-target.md) — tooling shadow JAR must compile to Java 17; root sets JVM 21 globally which breaks server startup on device

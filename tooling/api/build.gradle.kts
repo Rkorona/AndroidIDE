@@ -35,3 +35,17 @@ dependencies {
     api(libs.common.jsonrpc)
     implementation(libs.common.jkotlin)
 }
+
+// The tooling server JAR is executed by AndroidIDE's bundled JDK 17.
+// Override the root project's JVM 21 defaults to ensure compatibility.
+afterEvaluate {
+  configure<org.gradle.api.plugins.JavaPluginExtension> {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
+  }
+}

@@ -86,3 +86,12 @@ tasks.create("generateBuildInfo") {
 
 tasks.withType<JavaCompile> { dependsOn("generateBuildInfo") }
 tasks.withType<Jar> { dependsOn("generateBuildInfo") }
+
+// This module is bundled into the tooling server JAR which runs on AndroidIDE's
+// bundled JDK 17. Override the root project's JVM 21 defaults to ensure compatibility.
+afterEvaluate {
+  configure<org.gradle.api.plugins.JavaPluginExtension> {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+}
