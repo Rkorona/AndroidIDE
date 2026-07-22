@@ -59,12 +59,20 @@ object JdkUtils {
           }
 
           val java = File(dir, "bin/java")
-          if (!canExecute(java)) {
-            // java binary does not exist or is not executable
+          if (!java.exists() || !java.isFile) {
+            // java binary does not exist
             return@mapNotNull null
           }
 
-          return@mapNotNull getDistFromJavaBin(java)
+          // On Android 16+, W^X + SELinux policy blocks execve() on files in the app's
+          // private data directory, so executing the java binary to read its properties
+          // throws IOException (EACCES). Read the 'release' file instead — it contains
+          // JAVA_VERSION without requiring any process execution.
+          return@mapNotNull getDistFromReleaseFile(dir)
+            ?: run {
+              // Fallback: try executing the binary (works on Android < 16)
+              if (canExecute(java)) getDistFromJavaBin(java) else null
+            }
         } ?: run {
           log.error("Failed to list files in {}", optDir)
           emptyList()
@@ -73,6 +81,44 @@ object JdkUtils {
     } catch (e: Exception) {
       log.error("Failed to list java alternatives", e)
       emptyList()
+    }
+  }
+
+  /**
+   * Reads JDK distribution info from the standard `release` file in the given JDK installation
+   * directory. This avoids executing the java binary, which fails on Android 16+ due to the
+   * W^X (Write XOR Execute) + SELinux policy that blocks execve() on app private data files.
+   *
+   * The `release` file is a standard part of every JDK distribution and contains lines such as:
+   * ```
+   * JAVA_VERSION="17.0.8"
+   * ```
+   *
+   * @param jdkDir The root directory of the JDK installation (i.e. the value of JAVA_HOME).
+   * @return A [JdkDistribution] instance, or `null` if the file is missing or unparseable.
+   */
+  @JvmStatic
+  fun getDistFromReleaseFile(jdkDir: File): JdkDistribution? {
+    val releaseFile = File(jdkDir, "release")
+    if (!releaseFile.exists() || !releaseFile.isFile) {
+      log.debug("No 'release' file found in {}", jdkDir)
+      return null
+    }
+    return try {
+      val content = releaseFile.readText()
+      // JAVA_VERSION may be quoted ("17.0.8") or unquoted (17.0.8)
+      val javaVersion =
+        Regex("""JAVA_VERSION\s*=\s*"?([^"\n\r]+)"?""").find(content)?.groupValues?.get(1)
+          ?.trim()
+          ?: run {
+            log.warn("JAVA_VERSION not found in release file: {}", releaseFile)
+            return null
+          }
+      log.debug("Read JAVA_VERSION={} from release file in {}", javaVersion, jdkDir)
+      JdkDistribution(javaVersion, jdkDir.absolutePath)
+    } catch (e: Exception) {
+      log.warn("Failed to read release file from {}", releaseFile, e)
+      null
     }
   }
 

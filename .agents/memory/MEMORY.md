@@ -1,1 +1,2 @@
 - [Android 16 exec fix](android16-exec-fix.md) — Three-layer fix for Android 16 W^X/SELinux exec denial in AndroidIDE terminal
+- [JdkUtils release-file detection](jdkutils-release-file-detection.md) — findJavaInstallations() must use release file, not exec; exec path causes onboarding loop on Android 16
