@@ -95,10 +95,19 @@ class TemplateListFragment :
     log.debug("Reloading templates...")
 
     // Show only project templates
-    // reloading the tempaltes also makes sure that the resources are
+    // reloading the templates also makes sure that the resources are
     // released from template parameter widgets
-    val templates = ITemplateProvider.getInstance(reload = true).getTemplates()
-      .filterIsInstance<ProjectTemplate>()
+    val templates = try {
+      ITemplateProvider.getInstance(reload = true).getTemplates()
+        .filterIsInstance<ProjectTemplate>()
+    } catch (e: Exception) {
+      // ServiceLoader may fail to find TemplateProviderImpl if the META-INF/services
+      // entry is missing from the APK (e.g. annotation processor didn't run) or if
+      // the provider class cannot be instantiated. Log it and show an empty list
+      // rather than crashing the whole app.
+      log.error("Failed to load project templates", e)
+      emptyList()
+    }
 
     adapter = TemplateListAdapter(templates) { template, _ ->
       viewModel.template.value = template
