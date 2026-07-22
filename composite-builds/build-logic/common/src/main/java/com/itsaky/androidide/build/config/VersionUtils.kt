@@ -75,10 +75,7 @@ object VersionUtils {
         return@use latestVersion
       }
     } catch (err: Throwable) {
-      if (CI.isCiBuild) {
-        throw GradleException("Failed to download: $moduleMetadata", err)
-      }
-      println("Failed to download $moduleMetadata: ${err.message}")
+      println("Failed to download $moduleMetadata: ${err.message}. Falling back to '$LATEST_INTEGRATION'.")
       return LATEST_INTEGRATION
     }
   }
