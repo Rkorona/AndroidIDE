@@ -112,7 +112,8 @@
 
     <service
       android:exported="false"
-      android:name=".services.builder.GradleBuildService" />
+      android:name=".services.builder.GradleBuildService"
+      android:foregroundServiceType="dataSync" />
 
     <service
       android:exported="true"
