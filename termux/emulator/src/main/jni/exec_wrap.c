@@ -115,7 +115,8 @@ int execve(const char *path, char * const argv[], char * const envp[]) {
     }
 
     int ret = real(path, argv, envp);
-    if (ret != -1 || errno != EACCES) {
+    /* Retry on EACCES (SELinux W^X exec denial) or EPERM (some Android 16 kernels). */
+    if (ret != -1 || (errno != EACCES && errno != EPERM)) {
         return ret;  /* success, or an error we cannot fix */
     }
 

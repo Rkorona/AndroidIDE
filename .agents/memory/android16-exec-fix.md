@@ -67,6 +67,27 @@ Implemented in termux/emulator/src/main/jni/termux.c linker64 fallback block.
 `ReflectionUtils.getDeclaredField(process, "pid")` is blocked by hidden-API restrictions on API 28+.
 Use `process.pid().toInt()` (Java 9+ / API 26+) instead. Fixed in ToolingServerRunner.kt.
 
+## exec_wrap.c was dead code — now compiled into libtermux
+`termux/emulator/src/main/jni/exec_wrap.c` is a second, cleaner execve-override implementation.
+It existed but was NOT in `termux/emulator/src/main/jni/Android.mk`, so it was never compiled.
+Fix: added `exec_wrap.c` to LOCAL_SRC_FILES in Android.mk + `-ldl` to LOCAL_LDLIBS.
+This embeds the override directly in libtermux.so (loaded in the app/JVM process), providing
+defense-in-depth in case LD_PRELOAD is not honored by linker64 in direct-invocation mode.
+
+**Symbol conflict risk**: both exec_wrap.c (libtermux.so) and exec-wrapper.c (libandroidide-exec-wrapper.so)
+export `int execve(...)`. When both are loaded in the same process the dynamic linker picks one silently.
+See proposed task #4 for resolution.
+
+## EPERM handling added
+Both exec_wrap.c and exec-wrapper.c originally only checked `errno == EACCES`.
+Some Android 16 kernel/SELinux configs return EPERM for exec denial.
+Fixed: check `errno != EACCES && errno != EPERM` in both files.
+
+## Diagnostic log added
+TermuxShellEnvironment.java now logs a WARN when libandroidide-exec-wrapper.so is NOT found
+in nativeLibraryDir — the single most common silent failure cause (old APK without the .so).
+
 ## Testing
 - MUST clear app data before testing — TermuxInstaller skips if prefix already exists
 - Exit code 1 = exec never started; Exit code 126 = exec started but binary not executable
+- Check logcat for "Android 16 exec-wrapper: LD_PRELOAD set to ..." — if you see "NOT found" instead, the APK is old and needs a rebuild

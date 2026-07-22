@@ -138,9 +138,11 @@ static int exec_via_shebang(const char *pathname,
 /* ------------------------------------------------------------------ */
 /* Main entry point: override execve                                   */
 /* ------------------------------------------------------------------ */
+__attribute__((visibility("default")))
 int execve(const char *pathname, char *const argv[], char *const envp[]) {
     int ret = get_real_execve()(pathname, argv, envp);
-    if (ret != -1 || errno != EACCES) return ret;
+    /* Retry on EACCES (SELinux W^X exec denial) or EPERM (some Android 16 kernels). */
+    if (ret != -1 || (errno != EACCES && errno != EPERM)) return ret;
 
     /*
      * EACCES: determine whether this is an ELF or a shell script so we

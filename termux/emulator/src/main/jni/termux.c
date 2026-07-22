@@ -1,4 +1,5 @@
 #include <dirent.h>
+#include <dlfcn.h>
 #include <fcntl.h>
 #include <jni.h>
 #include <signal.h>
@@ -95,6 +96,31 @@ static int create_subprocess(JNIEnv* env,
 
         clearenv();
         if (envp) for (; *envp; ++envp) putenv(*envp);
+
+        // Android 16 W^X defense-in-depth: force-load the exec-wrapper shim from
+        // LD_PRELOAD even if the dynamic linker would not honor LD_PRELOAD in its
+        // direct-invocation mode (e.g. due to linker namespace isolation).
+        // After this dlopen() the child process has our execve() override active,
+        // so the execvp() call below goes through the shim which retries via linker64.
+        {
+            const char *preload = getenv("LD_PRELOAD");
+            if (preload) {
+                // LD_PRELOAD may be "path1:path2"; dlopen() only the first entry.
+                char *colon = strchr(preload, ':');
+                if (colon) {
+                    // Copy just the first path to a stack buffer.
+                    size_t len = (size_t)(colon - preload);
+                    if (len < 512) {
+                        char path[512];
+                        memcpy(path, preload, len);
+                        path[len] = '\0';
+                        dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
+                    }
+                } else {
+                    dlopen(preload, RTLD_LAZY | RTLD_GLOBAL);
+                }
+            }
+        }
 
         if (chdir(cwd) != 0) {
             char* error_message;

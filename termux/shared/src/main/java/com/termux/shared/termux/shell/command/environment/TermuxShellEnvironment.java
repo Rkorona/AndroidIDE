@@ -99,6 +99,10 @@ public class TermuxShellEnvironment extends AndroidShellEnvironment {
                     (existing != null && !existing.isEmpty())
                         ? wrapperPath + ":" + existing
                         : wrapperPath);
+                Logger.logDebug(LOG_TAG, "Android 16 exec-wrapper: LD_PRELOAD set to " + wrapperPath);
+            } else {
+                Logger.logWarn(LOG_TAG, "Android 16 exec-wrapper: libandroidide-exec-wrapper.so NOT found in " +
+                    nativeLibDir + " — external commands in the terminal will fail with Permission denied");
             }
         }
 
