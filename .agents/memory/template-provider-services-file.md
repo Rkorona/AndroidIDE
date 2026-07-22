@@ -32,7 +32,15 @@ belt-and-suspenders.
 ## Known cases fixed
 - `com.itsaky.androidide.templates.ITemplateProvider` → `TemplateProviderImpl` (templates-impl module)
 - `com.itsaky.androidide.templates.ITemplateWidgetViewProvider` → `TemplateWidgetViewProviderImpl` (templates-impl module)
-- `com.itsaky.androidide.projects.IProjectManager` → `ProjectManagerImpl` (core/projects module) — caused crash on "open project" / "create project"
+- `com.itsaky.androidide.projects.IProjectManager` → `ProjectManagerImpl` (core/projects module) — crash on "open/create project"
+- `com.itsaky.androidide.actions.ActionsRegistry` → `DefaultActionsRegistry` (core/actions module) — crash on EditorActivity launch
+- `com.itsaky.androidide.xml.resources.ResourceTableRegistry` → `DefaultResourceTableRegistry` (xml/utils module)
+- `com.itsaky.androidide.xml.versions.ApiVersionsRegistry` → `DefaultApiVersionsRegistry` (xml/utils module)
+- `com.itsaky.androidide.xml.widgets.WidgetTableRegistry` → `DefaultWidgetTableRegistry` (xml/utils module)
+
+## Known working without manual file (do NOT add duplicate)
+- `com.itsaky.androidide.lookup.Lookup` — `DefaultLookup` in utilities/lookup; app starts correctly so its @AutoService output is merged properly
+- Services whose implementations live directly in `core/app` — @AutoService works for same-module impls
 
 ## Defense-in-depth
 `TemplateListFragment.reloadTemplates()` also wraps the `getInstance()` call in a try/catch.
