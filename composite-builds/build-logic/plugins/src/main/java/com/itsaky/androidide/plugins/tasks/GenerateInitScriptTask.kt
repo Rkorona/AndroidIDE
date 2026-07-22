@@ -54,6 +54,12 @@ abstract class GenerateInitScriptTask : DefaultTask() {
       initscript {
           repositories {
               
+              // mavenLocal allows locally-built/published snapshots to be resolved first.
+              // This is essential for developer builds and CI builds whose SNAPSHOT has not
+              // yet been published to Sonatype (run './gradlew :tooling:plugin:publishToMavenLocal'
+              // on a development machine to make it available here).
+              mavenLocal()
+              
               // Always specify the snapshots repository first
               maven {
                   // Add snapshots repository for AndroidIDE CI builds
@@ -71,7 +77,7 @@ abstract class GenerateInitScriptTask : DefaultTask() {
 
           dependencies {
               classpath('${mavenGroupId.get()}:gradle-plugin:${downloadVersion.get()}') {
-                  setChanging(false)
+                  setChanging(${downloadVersion.get().endsWith("-SNAPSHOT")})
               }
           }
       }

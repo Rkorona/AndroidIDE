@@ -109,7 +109,49 @@ static int create_subprocess(JNIEnv* env,
         // Fallback: invoke the system dynamic linker directly. The linker is a trusted system
         // binary whose exec is always permitted; it loads the target ELF via mmap (not execve),
         // bypassing the execve restriction on files in the app's private data directory.
+        //
+        // Special case: if cmd is a shell script (starts with '#!') rather than an ELF binary,
+        // linker64 cannot load it directly — we must parse the shebang and pass the interpreter
+        // as the ELF target instead.
         {
+            // Detect file type: ELF (\x7fELF) vs script (#!).
+            // For scripts, parse the interpreter path from the shebang line.
+            const char* elf_target = cmd;  // The ELF binary to hand to linker64
+            char interp_buf[512] = {0};    // Stack buffer for parsed interpreter path
+
+            {
+                int fd = open(cmd, O_RDONLY);
+                if (fd >= 0) {
+                    // Read only the first 2 bytes to detect '#!'.
+                    // Keeping the read to exactly 2 bytes means the file offset
+                    // is already at byte 2 — the first character of the interpreter
+                    // path — so parsing below captures the full path without truncation.
+                    unsigned char magic[2] = {0};
+                    if (read(fd, magic, 2) == 2 && magic[0] == '#' && magic[1] == '!') {
+                        // Script — file offset is now at byte 2, right after '#!'.
+                        // Format: #![optional-space]<interp>[<space or newline>...]
+                        int i = 0;
+                        unsigned char c;
+                        // Skip optional spaces directly after '#!'
+                        while (read(fd, &c, 1) == 1 && c == ' ') {}
+                        // c is now the first non-space character of the interpreter path.
+                        if (c != '\n' && c != '\r' && c != '\0') {
+                            interp_buf[i++] = (char) c;
+                            while (i < (int)(sizeof(interp_buf) - 1)
+                                   && read(fd, &c, 1) == 1
+                                   && c != ' ' && c != '\t' && c != '\n' && c != '\r') {
+                                interp_buf[i++] = (char) c;
+                            }
+                        }
+                        if (i > 0) {
+                            // Use the interpreter as the ELF target for linker64.
+                            elf_target = interp_buf;
+                        }
+                    }
+                    close(fd);
+                }
+            }
+
             const char* linker_path = NULL;
             if (access("/system/bin/linker64", X_OK) == 0) {
                 linker_path = "/system/bin/linker64";
@@ -117,19 +159,34 @@ static int create_subprocess(JNIEnv* env,
                 linker_path = "/system/bin/linker";
             }
             if (linker_path != NULL) {
-                // Count existing argv entries.
                 int argc = 0;
                 while (argv[argc]) argc++;
-                // new_argv = [linker_path, cmd, argv[1], ..., argv[argc-1], NULL]
-                char** new_argv = (char**) malloc((argc + 2) * sizeof(char*));
-                if (new_argv) {
-                    new_argv[0] = (char*) linker_path;
-                    new_argv[1] = (char*) cmd;
-                    for (int i = 1; i < argc; i++) new_argv[i + 1] = argv[i];
-                    new_argv[argc + 1] = NULL;
-                    execv(linker_path, new_argv);
-                    // execv of the system linker itself failed — nothing more we can do.
-                    free(new_argv);
+
+                char** new_argv;
+                if (elf_target != cmd) {
+                    // Script: new_argv = [linker_path, interp, script, argv[1..], NULL]
+                    // linker64 loads the interpreter (ELF); the script path becomes its argument.
+                    new_argv = (char**) malloc((argc + 3) * sizeof(char*));
+                    if (new_argv) {
+                        new_argv[0] = (char*) linker_path;
+                        new_argv[1] = (char*) elf_target;
+                        new_argv[2] = (char*) cmd;
+                        for (int i = 1; i < argc; i++) new_argv[i + 2] = argv[i];
+                        new_argv[argc + 2] = NULL;
+                        execv(linker_path, new_argv);
+                        free(new_argv);
+                    }
+                } else {
+                    // ELF: new_argv = [linker_path, cmd, argv[1..], NULL]
+                    new_argv = (char**) malloc((argc + 2) * sizeof(char*));
+                    if (new_argv) {
+                        new_argv[0] = (char*) linker_path;
+                        new_argv[1] = (char*) cmd;
+                        for (int i = 1; i < argc; i++) new_argv[i + 1] = argv[i];
+                        new_argv[argc + 1] = NULL;
+                        execv(linker_path, new_argv);
+                        free(new_argv);
+                    }
                 }
             }
         }

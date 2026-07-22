@@ -51,6 +51,18 @@ at the command-list level:
   if (SDK_INT >= 36) prepend("/system/bin/linker64") to command
 Fixed in: ToolingServerRunner.kt (for JVM/tooling-api-all.jar launch)
 
+## CRITICAL: linker64 can only load ELF binaries — not shell scripts
+The linker64 trick in termux.c must check the file's magic bytes before using it.
+If the target file starts with `#!` (shebang), it is a script, NOT an ELF.
+Passing a script to linker64 produces: `error: "..." has bad ELF magic: 23212f64`
+(0x23212f64 = '#!fd', the first 4 bytes of a shebang like #!/data/...)
+
+**Fix (termux.c Layer 2):** Before calling execv(linker_path, ...), read the first 4 bytes:
+- If `\x7fELF`: proceed as before — linker64 cmd argv[1..]
+- If `#!`: parse interpreter from shebang, exec: linker64 interp script argv[1..]
+  The interpreter (e.g. bash) is an ELF; linker64 loads it, and it runs the script.
+Implemented in termux/emulator/src/main/jni/termux.c linker64 fallback block.
+
 ## PID retrieval
 `ReflectionUtils.getDeclaredField(process, "pid")` is blocked by hidden-API restrictions on API 28+.
 Use `process.pid().toInt()` (Java 9+ / API 26+) instead. Fixed in ToolingServerRunner.kt.
