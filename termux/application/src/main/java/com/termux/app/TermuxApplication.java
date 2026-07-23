@@ -59,6 +59,11 @@ public class TermuxApplication extends BaseApplication {
         TermuxShellEnvironment.init(this);
 
         if (isTermuxFilesDirectoryAccessible) {
+            // Android 16: re-apply exec-wrapper setup on every launch so that app
+            // updates (which may ship a newer exec-wrapper.so) are picked up even
+            // if the bootstrap was already installed in a previous run.
+            TermuxInstaller.setupExecWrapperInPrefix(this);
+
             TermuxShellEnvironment.writeEnvironmentToFile(this);
         }
     }

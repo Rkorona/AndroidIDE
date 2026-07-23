@@ -67,6 +67,23 @@ Implemented in termux/emulator/src/main/jni/termux.c linker64 fallback block.
 `ReflectionUtils.getDeclaredField(process, "pid")` is blocked by hidden-API restrictions on API 28+.
 Use `process.pid().toInt()` (Java 9+ / API 26+) instead. Fixed in ToolingServerRunner.kt.
 
+## DT_NEEDED approach — the REAL fix (LD_PRELOAD is silently ignored)
+On Android 16, linker64 in **standalone/direct-invocation mode** (`execv(linker64,[linker64,bash,...])`)
+completely ignores LD_PRELOAD. Confirmed by user screenshot: chmod, pkg, all fail even after APK rebuild.
+
+**Fix (ElfPatcher.java + TermuxInstaller.setupExecWrapperInPrefix)**:
+1. Copy `libandroidide-exec-wrapper.so` from `nativeLibraryDir` → `$PREFIX/lib/`
+2. Patch bash's ELF in-place to add:
+   - `DT_RUNPATH = "$ORIGIN/../lib"` (so linker64 finds $PREFIX/lib)
+   - `DT_NEEDED = "libandroidide-exec-wrapper.so"` inserted BEFORE all existing DT_NEEDEDs
+     (order matters: bionic resolves PLT symbols in DT_NEEDED load order;
+      exec-wrapper must be first to override libc's execve)
+3. Called at bootstrap install time AND on every app launch (for APK updates)
+
+ElfPatcher uses in-place mmap patching: appends strings to zero-byte gap after strtab content,
+shifts dynamic section entries to insert before first existing DT_NEEDED. Returns false gracefully
+if not enough space (LD_PRELOAD fallback still present).
+
 ## exec_wrap.c was dead code — now compiled into libtermux
 `termux/emulator/src/main/jni/exec_wrap.c` is a second, cleaner execve-override implementation.
 It existed but was NOT in `termux/emulator/src/main/jni/Android.mk`, so it was never compiled.

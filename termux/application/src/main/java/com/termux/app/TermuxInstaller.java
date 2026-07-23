@@ -239,6 +239,12 @@ public final class TermuxInstaller {
 
                     Logger.logInfo(LOG_TAG, "Bootstrap packages installed successfully.");
 
+                    // Android 16 W^X fix: copy exec-wrapper into the prefix lib dir and
+                    // patch bash's ELF so linker64 loads it as a DT_NEEDED dependency.
+                    // This is the only reliable mechanism when LD_PRELOAD is ignored by
+                    // linker64 in its standalone (direct-invocation) mode.
+                    setupExecWrapperInPrefix(activity);
+
                     // Recreate env file since termux prefix was wiped earlier
                     TermuxShellEnvironment.writeEnvironmentToFile(activity);
 
@@ -258,6 +264,73 @@ public final class TermuxInstaller {
                 }
             }
         }.start();
+    }
+
+    /**
+     * Copies {@code libandroidide-exec-wrapper.so} from the APK's native library
+     * directory into {@code $PREFIX/lib/} and patches the bash binary's ELF to add a
+     * {@code DT_NEEDED} dependency on it.
+     *
+     * <p>Android 16's linker64 ignores {@code LD_PRELOAD} when invoked in standalone
+     * mode.  A {@code DT_NEEDED} entry is the only way to inject exec-wrapper into
+     * bash's address space so that its {@code execve()} override is active for all
+     * child-process exec calls.
+     *
+     * <p>Safe to call on every app start — both the copy and the patch are no-ops
+     * when already up to date.
+     */
+    public static void setupExecWrapperInPrefix(Context context) {
+        if (android.os.Build.VERSION.SDK_INT < 36) return; // Android 16+ only
+
+        String nativeLibDir = context.getApplicationInfo().nativeLibraryDir;
+        File   src          = new File(nativeLibDir, ElfPatcher.EXEC_WRAPPER_LIB);
+        File   dst          = new File(TermuxConstants.TERMUX_LIB_PREFIX_DIR_PATH,
+                                       ElfPatcher.EXEC_WRAPPER_LIB);
+
+        if (!src.exists()) {
+            Logger.logWarn(LOG_TAG,
+                "setupExecWrapperInPrefix: source not found: " + src);
+            return;
+        }
+
+        // Ensure the lib directory exists.
+        File libDir = new File(TermuxConstants.TERMUX_LIB_PREFIX_DIR_PATH);
+        if (!libDir.exists()) {
+            if (!libDir.mkdirs()) {
+                Logger.logWarn(LOG_TAG,
+                    "setupExecWrapperInPrefix: cannot create lib dir: " + libDir);
+                return;
+            }
+        }
+
+        // Copy exec-wrapper into the prefix lib dir if absent or out of date.
+        boolean needCopy = !dst.exists() || dst.lastModified() < src.lastModified();
+        if (needCopy) {
+            try {
+                java.io.FileInputStream  in  = new java.io.FileInputStream(src);
+                java.io.FileOutputStream out = new java.io.FileOutputStream(dst);
+                byte[] buf = new byte[8192];
+                int n;
+                while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
+                in.close();
+                out.close();
+                Logger.logInfo(LOG_TAG,
+                    "setupExecWrapperInPrefix: copied exec-wrapper to " + dst);
+            } catch (java.io.IOException e) {
+                Logger.logError(LOG_TAG,
+                    "setupExecWrapperInPrefix: copy failed: " + e.getMessage());
+                return;
+            }
+        }
+
+        // Patch bash's ELF to add DT_NEEDED and DT_RUNPATH.
+        File bash = new File(TermuxConstants.TERMUX_BIN_PREFIX_DIR_PATH, "bash");
+        boolean patched = ElfPatcher.patchBash(bash);
+        if (!patched) {
+            Logger.logWarn(LOG_TAG,
+                "setupExecWrapperInPrefix: ELF patch failed or was skipped for " + bash +
+                ". LD_PRELOAD fallback still active but may not work on Android 16.");
+        }
     }
 
     public static void showBootstrapErrorDialog(Activity activity, Runnable whenDone, String message) {
